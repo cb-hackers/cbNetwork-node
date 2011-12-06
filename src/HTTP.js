@@ -9,22 +9,17 @@ var http = require('http'),
   urlParser = require('url');
 
 /**
- * A wrapper class for Node's HTTP API to be more similar to the one in cbNetwork
- */
-cbNetwork.HTTP = {};
-
-/**
  * Creates a HTTP GET request and calls the callback with the results
  *
  * @param {String} url Address to GET
  * @param {Function} cb function (statusCode, data) { } statusCode will be 0 on failure
  */
-cbNetwork.HTTP.get = function (url, cb) {
+exports.get = function (url, cb) {
   var urlObj = urlParser.parse(url);
   http.get({
-    host: url.hostname,
+    host: urlObj.hostname,
     port: 80,
-    path: url.path,
+    path: urlObj.path,
     agent: false
   // Let's wait for the server's response
   }, function (res) {

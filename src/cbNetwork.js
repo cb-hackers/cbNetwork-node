@@ -1,3 +1,1 @@
-var cbNetwork = {};
-
-exports.cbNetwork = cbNetwork;
+exports.HTTP = require('./HTTP');
