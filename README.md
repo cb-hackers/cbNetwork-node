@@ -1,4 +1,4 @@
-A node.js implementation of cbNetwork
+A Node.js implementation of cbNetwork
 =====================================
 
 Coding conventions
