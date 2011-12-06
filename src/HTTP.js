@@ -16,8 +16,8 @@ cbNetwork.HTTP = {};
 /**
  * Creates a HTTP GET request and calls the callback with the results
  *
- * @param {String} url Address to GET
- * @param {Function} cb function (statusCode, data) { } statusCode will be 0 on failure
+ * @param {String} url   Address to GET
+ * @param {Function} cb  function (statusCode, data) { } statusCode will be 0 on failure
  */
 cbNetwork.HTTP.get = function (url, cb) {
   var urlObj = urlParser.parse(url);
