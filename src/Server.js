@@ -11,20 +11,31 @@ var dgram = require('dgram'),
 
 function cbServer(port) {
   var self = this;
+  this.connections = [];
   this.sock = dgram.createSocket('udp4', function (msg, peer) {
+    peer.id = peer.address + ':' + peer.port;
     var data = new Net(new Buffer(msg)); // Get a REAL Buffer from the ugly SlowBuffer :S
     self.emit('message', data, peer);
+  });
+  this.sock.on('error', function (e) {
+    console.log('UDP ERROR');
+    console.log(e);
+    self.sock.close();
+  });
+  this.sock.on('close', function (e) {
+    console.log('UDP CLOSED');
+    console.log(e);
   });
   this.sock.bind(port);
 }
 
 cbServer.prototype.__proto__ = EventEmitter.prototype;
 
-cbServer.prototype.send = function (data) {
+cbServer.prototype.send = function (data, client) {
   if (!data instanceof Net) {throw Error('Data must be a Net object.');}
-  console.log('Sending: ');
-  console.log(data.memBlock);
-  this.sock.send(data.memBlock);
+  this.sock.send(data.memBlock, 0, data.memBlock.length, client.port, client.address, function (err, bytes) {
+    if (err) {console.log(err);}
+  });
 };
 
 exports.createServer = cbServer;

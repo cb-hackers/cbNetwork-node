@@ -13,28 +13,33 @@ exports.Net = Net;
  */
 function Net (input) {
   // If it's a number
-  this.memBlock = undefined;
   if ('number' === typeof input) {
     this.memBlock = new Buffer(input + 4);
   } else if (input instanceof Buffer) {
     this.memBlock = input;
   } else {
-    throw Error('First argument must be a number or a buffer.');
+    this.memBlock = new Buffer(0);
   }
   this.offset = 4;
 };
 
 /**
- * Sets the memblocks size to the one given. This only allows increasing the size.
+ * Increases the size of the memBlock by the given one. This only allows increasing the size.
  *
- * @param {Number} size  is the new size in bytes
+ * @param {Number} size  is the new size in bytes added to the offset
  */
 Net.prototype.resize = function (size) {
   // Only allow increasement
   if (this.offset + size > this.memBlock.length) {
-    this.memBlock = this.memBlock.slice(0, this.offset + size);
+    var newBuf = new Buffer(this.offset + size);
+    this.memBlock.copy(newBuf, 0, 0);
+    this.memBlock = newBuf;
   }
 };
+
+////////////////////////////
+/////////////////// GETTERS
+////////////////////////////
 
 /**
  * Returns a byte from the memblock and moves the offset accordingly
@@ -56,10 +61,14 @@ Net.prototype.__defineGetter__('integer', function () {
  */
 Net.prototype.__defineGetter__('string', function () {
   var len = this.integer,
-    str = this.memBlock.toString('utf8', this.offset, this.offset + len);
+    str = this.memBlock.toString('ascii', this.offset, this.offset + len);
   this.offset += len;
   return str;
 });
+
+////////////////////////////
+/////////////////// SETTERS
+////////////////////////////
 
 /**
  * Puts a byte to the memblock and moves the offset accordingly
@@ -67,6 +76,7 @@ Net.prototype.__defineGetter__('string', function () {
  * @param data  byte to write 0-255 
  */
 Net.prototype.__defineSetter__('byte', function (value) {
+  this.resize(1); // Resize memBlock if needed
   this.memBlock[this.offset++] = value;
 });
 
@@ -74,6 +84,19 @@ Net.prototype.__defineSetter__('byte', function (value) {
  * Puts an int to the memblock and moves the offset accordingly
  */
 Net.prototype.__defineSetter__('integer', function (value) {
+  this.resize(4); // Resize memBlock if needed
+  this.memBlock.writeInt32LE(value, this.offset);
   this.offset += 4;
-  return this.memBlock.writeInt32LE(value, this.offset - 4);
+});
+
+/**
+ * Puts a string to the memblock and moves the offset accordingly
+ */
+Net.prototype.__defineSetter__('string', function (value) {
+  if ('string' !== typeof value) {throw TypeError();}
+  var len = value.length;
+  this.integer = len;
+  this.resize(len); // Resize memBlock if needed
+  this.memBlock.write(value, this.offset, this.offset + len, 'ascii');
+  this.offset += len;
 });
