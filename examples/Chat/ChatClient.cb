@@ -1,0 +1,242 @@
+SCREEN 640, 480
+
+Include "../../libs/cbNetwork.cb"
+Include "../../libs/ChatUtil.cb"
+
+SetWindow "CB-Chat (client)"
+
+// K‰ynnistet‰‰n client.
+nRet = InitClient("localhost", PORT, 1000)
+If nRet <> 0 Then
+    // Tuli joku virhe
+    errMsg$ = "(" + nRet + ") " + GetNetErrorString(nRet)
+    MakeError errMsg 
+EndIf
+
+SAFEEXIT OFF
+
+Global gLoggedIn, gClientDataSended
+gLoggedIn           = False
+gClientDataSended   = False
+
+Global gInputMessage$, gSendMessage$
+
+gMode = MODE_CLIENT
+//================================================================================
+// P‰‰silmukka
+//================================================================================
+Repeat
+    DrawGUI()
+    If ReadDataFromServer() = False Then Exit
+    SendDataToServer()
+    PrintClients()
+    PrintMessages()
+    DrawScreen
+Until KeyHit(cbKeyEsc)
+
+// LOGOUT
+// Odotellaan max 2 sekuntia tai niin kauan ett‰ linja on "vapaa"
+t = Timer()
+While ClientState() = 1
+    If t + 2000 < Timer() Then Exit
+Wend
+If ClientState() = 2 Then ClientRead()
+// L‰hetet‰‰n poistumisviesti
+_Net_InitMemBlock()
+_Net_PutByte(NET_LOGOUT)
+_Net_PutByte(NET_END)
+ClientSend()
+// Odotellaan viel‰ puoli sekuntia
+Wait 500 - (Timer() - t)
+
+
+//================================================================================
+// Piirret‰‰n k‰yttˆliittym‰
+//================================================================================
+Function DrawGUI()
+    SetFont gFntBold
+    Color 255, 255, 0
+    Text 10, 5, "CB-Chat"
+    Line 0, 22, 640, 22
+    Line 0, 450, 640, 450
+    Line 500, 22, 500, 450
+    Locate 5, 455
+    Color 255, 255, 255
+    SetFont gFntNormal
+    If Not gLoggedIn Then
+        gInputMessage = Input("Anna nimimerkkisi: ")
+    Else
+        gInputMessage = Input("Kirjoita viesti: ")
+    EndIf
+    If KeyHit(cbKeyReturn) Then
+        gSendMessage = gInputMessage'Trim(gInputMessage)
+        CloseInput
+    EndIf
+EndFunction
+
+//================================================================================
+// Luetaan serverin l‰hett‰m‰‰ dataa
+//================================================================================
+Function ReadDataFromServer()
+    // Ei j‰‰d‰ lukemaan dataa jos mit‰‰n ei ole l‰hetettyk‰‰n
+    If gClientDataSended = False Then Return True
+    
+    // Nyt luetaan
+    nRet = ClientRead()
+    // Jos paluuarvo on alle 0 niin kaikki data ei ole viel‰ tullut palvelimelta
+    If nRet < 0 Then Return True
+    
+    // Lukemisessa tuli joku virhe
+    If nRet <> 0 Then 
+        // Jos virhe oli "Connection timed out" niin ei v‰litet‰ siit‰
+        If nRet = 10060 Then Return True
+        errMsg$ = "(" + nRet + ") " + GetNetErrorString(nRet)
+        MakeError errMsg
+    EndIf
+    
+    // Nyt data on luettu. Nollataan muuttuja joka antaa luvan l‰hett‰‰ lis‰‰ dataa serverille.
+    gClientDataSended = False
+    
+    // Muistipalan alussa on aina saapuneen datan pituus joka luetaan t‰ss‰ pois
+    _Net_GetInt()
+
+    // Luetaan kaikki saapuneet viestit
+    While True
+        netmsg = _Net_GetByte() // Viestin tyyppi
+        
+        If netmsg = NET_LOGIN_OK Then
+            // Login onnistui
+            gLoggedIn = True
+            
+        ElseIf netmsg = NET_LOGIN_FAILED Then
+            // Login ep‰onnistui
+            SetWindow "FAILED LOL"
+            gLoggedIn = False
+            
+        ElseIf netmsg = NET_LOGIN Then
+            // Joku liittyi pelvelimelle
+            clientId$   = _Net_GetString()  // Clientin tunnus
+            name$       = _Net_GetString()  // Nimi
+            // Lis‰t‰‰n viesti ruudulle
+            msg.MESSAGES    = New(MESSAGES)
+            msg\msgType     = NET_LOGIN
+            msg\senderId    = clientId
+            msg\name        = name
+            CreateClient(clientId, name)
+            
+        ElseIf netmsg = NET_CLIENT_INFO Then
+            // Joku liittyi pelvelimelle
+            clientId$   = _Net_GetString()  // Clientin tunnus
+            name$       = _Net_GetString()  // Nimi
+            CreateClient(clientId, name)
+            
+        ElseIf netmsg = NET_LOGOUT Then
+            // Joku liittyi pelvelimelle
+            clientId$   = _Net_GetString()  // Clientin tunnus
+            // Lis‰t‰‰n viesti ruudulle
+            msg.MESSAGES    = New(MESSAGES)
+            msg\msgType     = NET_LOGOUT
+            msg\senderId    = clientId
+            msg\name        = GetClientName(clientId)
+            DeleteClient(clientId)
+            
+        ElseIf netmsg = NET_TEXT_MESSAGE Then
+            // Teksti‰ tulossa
+            clientId$   = _Net_GetString()  // Kuka l‰hetti
+            txt$        = _Net_GetString()  // Teksti
+            // Lis‰t‰‰n viesti ruudulle
+            msg.MESSAGES    = New(MESSAGES)
+            msg\msgType     = NET_TEXT_MESSAGE
+            msg\senderId    = clientId
+            msg\name        = GetClientName(clientId)
+            msg\message     = txt
+            
+        ElseIf netmsg = NET_END Then
+            // Viestin loppumerkki
+            Exit
+            
+        Else
+            // Tuntematon viesti
+            Exit
+        EndIf
+    Wend
+    Return True
+EndFunction
+
+
+//================================================================================
+// L‰hetet‰‰n serverille dataa
+//================================================================================
+Function SendDataToServer()
+    // Jos viesti on jo l‰hetetty mutta vastausta ei ole luettu niin ei l‰hetet‰ uudestaan
+    If gClientDataSended = True Then Return False
+
+    // Jos ei olle viel‰ kirjauduttu eik‰ nime‰ annettu niin ei tehd‰ mit‰‰n
+    If gLoggedIn = False And gSendMessage = "" Then Return False
+    
+    // Muistipalan alustus ensin
+    _Net_InitMemBlock()
+    
+    // Jos ei viel‰ olla kirjauduttu palvelimelle niin tehd‰‰n se nyt
+    If gLoggedIn = False Then
+        _Net_PutByte(NET_LOGIN)
+        _Net_PutString(gSendMessage)
+        gSendMessage = ""
+    Else
+        // Ollaan jo kirjauduttu palvelimelle
+        // Jos mit‰‰n viesti‰ ei ole kirjoitettu niin l‰hetet‰‰n idle-viesti
+        If gSendMessage = "" Then
+            _Net_PutByte(NET_IDLE)
+        Else
+            // Teksti‰ on kirjoitettu joten l‰hetet‰‰n se
+            _Net_PutByte(NET_TEXT_MESSAGE)
+            _Net_PutString(gSendMessage)
+            gSendMessage = ""
+        EndIf
+    EndIf
+    
+    // Kirjoitetaan viel‰ vistin loppumerkki ja l‰hetet‰‰n.
+    _Net_PutByte(NET_END)
+    // ClientSendBack l‰hett‰‰ datan serverille ja j‰‰ heti odottamaan vastausta
+    // mutta palauttaa kuitenkin kontrollin heti t‰nne. Vastausta siis odotellaan "taustalla".
+    ClientSendBack()
+    // Laitetaan muuttujaan tieto ett‰ dataa on l‰hetetty.
+    gClientDataSended = True
+EndFunction
+
+
+//================================================================================
+// Tulostetaan kaikki viestit ruudulle
+//================================================================================
+Function PrintMessages()
+    x = 10
+    y = 25
+    For msg.MESSAGES = Each MESSAGES
+        Color 255, 255, 255
+        // Normaali tekstiviesti
+        If msg\msgType = NET_TEXT_MESSAGE Then
+            SetFont gFntBold
+            Text x, y, msg\name + ": "
+            tw = TextWidth(msg\name + ": ")
+            SetFont gFntNormal
+            Text x + tw, y, msg\message
+        EndIf
+        // Login-ilmoitus
+        If msg\msgType = NET_LOGIN Then
+            Color 0, 255, 0
+            Text x, y, msg\name + " liittyi keskusteluun"
+        EndIf
+        // Logout-ilmoitus
+        If msg\msgType = NET_LOGOUT Then
+            Color 255, 0, 0
+            Text x, y, msg\name + " poistui keskustelusta"
+        EndIf
+        y + 15
+        If y > 450 Then
+            // Ruutu tuli t‰yteen. Poistetaan ensimm‰inen viesti.
+            m.MESSAGES = First(MESSAGES)
+            If m <> NULL Then Delete m
+            Exit
+        EndIf
+    Next msg
+EndFunction

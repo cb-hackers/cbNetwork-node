@@ -1,0 +1,188 @@
+Include "../../libs/cbNetwork.cb"
+Include "../../libs/ChatUtil.cb"
+
+SetWindow "CB-Chat (server)"
+
+// K‰ynnistet‰‰n palvelin.
+// Koska tiedon lukeminen keskeytt‰‰ t‰m‰n ohjelman suorituksen niin
+// asetetaan timeoutiksi 200 millisekuntia. Dataa siis odotellaan vain 200 ms
+// jonka j‰lkeen kotrolli palaa DLL:st‰ t‰h‰n ohjelmaan.
+nRet = InitServer(PORT, 200)
+If nRet <> 0 Then
+    // Tuli joku virhe
+    errMsg$ = "(" + nRet + ") " + GetNetErrorString(nRet)
+    MakeError errMsg 
+EndIf
+
+SAFEEXIT OFF
+
+//================================================================================
+// Ohjelman p‰‰silmukka
+//================================================================================
+gMode = MODE_SERVER
+Repeat
+    ReadFromClient()
+    CheckClients()
+    PrintClients()
+    DrawScreen
+Until KeyHit(cbKeyEsc)
+
+// Suljetaan palvelin
+CloseServer()
+
+
+//================================================================================
+// Luetaan dataa clientilt‰.
+//================================================================================
+Function ReadFromClient()
+    // Luetaan dataa
+    nRet = ServerRead()
+
+    // Tuli joku virhe. Esimerkiksi timeout eli dataa ei tullut m‰‰r‰aikaan menness‰.
+    If nRet <> 0 Then Return False
+    
+    // Muistipalan alussa on aina luetun datan pituus joka luetaan t‰ss‰ pois
+    _Net_GetInt()
+
+    // Mit‰ dataa on tulossa
+    netmsg = _Net_GetByte()
+    
+    // Onko joku liittym‰ss‰ keskusteluun
+    If netmsg = NET_LOGIN Then
+        // Luetaan nimimerkki
+        name$ = _Net_GetString()
+        // Tarkistetaan ett‰ nimi on annettu
+        If Trim(name) = "" Then
+            // Nimi oli tyhj‰.
+            // L‰hetet‰‰n hylk‰ysviesti koska nimi on pakollinen
+            _Net_InitMemBlock()             // Alustetaan datapaketti
+            _Net_PutByte(NET_LOGIN_FAILED)  // Viestin tyypiksi "ep‰onnistunut kirjautuminen"
+            _Net_PutByte(NET_END)           // Viestin loppu
+            ServerSend()                    // L‰hetys
+            Return True
+        EndIf
+        // Nimi oli kunnossa. Liitet‰‰n client mukaan.
+        CreateClient(NET_ClientId, name)
+        // L‰hetet‰‰n viesti onnistuneesta loginista
+        _Net_InitMemBlock()                 // Alustetaan datapaketti
+        _Net_PutByte(NET_LOGIN_OK)          // Viestin tyypiksi "onnistunut kirjautuminen"
+        
+        // L‰hetet‰‰n viel‰ kaikkien clienttien tiedot
+        For client.CLIENTS = Each CLIENTS
+            _Net_PutByte(NET_CLIENT_INFO)   // Viestin tunnus
+            _Net_PutString(client\clientId) // Clientin tunnus
+            _Net_PutString(client\name)     // Nimi
+        Next client
+        
+        _Net_PutByte(NET_END)               // Viestin loppu
+        ServerSend()                        // L‰hetys
+        Return True
+    EndIf
+    
+    // Onko joku poistumassa
+    If netmsg = NET_LOGOUT Then
+        DeleteClient(NET_ClientId)
+        Return True
+    EndIf
+    
+    // Etsit‰‰n client joka viestin l‰hetti ja p‰ivitet‰‰n timestamp
+    For client.CLIENTS = Each CLIENTS
+        If client\clientId = NET_ClientId Then
+            client\lastActivity = Timer()
+        EndIf
+    Next client
+    
+    // Luetaan silmukassa kaikki saapuneet viestit l‰pi.
+    // Login ja logout on k‰sitelty erikseen aiemmin.
+    While True
+        If netmsg = NET_TEXT_MESSAGE Then
+            // Teksti‰ tulossa
+            textMsg$ = _Net_GetString()     // Luetaan merkkijono
+            SendTextToClients(textMsg)      // L‰hetet‰‰n viesti kaikille
+            
+        ElseIf netmsg = NET_END Then
+            // Merkki viestin loppumisesta
+            Exit
+            
+        ElseIf netmsg = NET_IDLE Then
+            // Clientilt‰ ei tullut mit‰‰n
+            Exit
+            
+        Else
+            // Tuntematon viesti
+            Exit
+        EndIf
+        // Luetaan seuraavan viestin tyyppi
+        netmsg = _Net_GetByte()
+    Wend
+    
+    // L‰hetet‰‰n clientille kaikki sille osoitetut viestit
+    
+    _Net_InitMemBlock() // Datapaketin alustus
+    For msg.MESSAGES = Each MESSAGES
+        // Tarkistetaan ett‰ viesti on osoitettu t‰lle clientille
+        If msg\clientId = NET_ClientId Then
+            // Aluksi kirjoitetaan viestin tyyppi
+            _NET_PutByte(msg\msgType)
+
+            // Joku on liittynyt keskusteluun
+            If msg\msgType = NET_LOGIN Then
+                _Net_PutString(msg\senderId)    // Clientin tunnus joka on liittynyt pelvelimelle
+                _Net_PutString(msg\message)     // Clientin nimi
+            EndIf
+            
+            // Joku on poistunut keskustelusta
+            If msg\msgType = NET_LOGOUT Then
+                _Net_PutString(msg\senderId)    // Clientin tunnus joka on poistunut
+            EndIf
+            
+            // Teksti‰
+            If msg\msgType = NET_TEXT_MESSAGE Then
+                _Net_PutString(msg\senderId)    // Clientin tunnus joka on kirjoittanut t‰m‰n viestin
+                _Net_PutString(msg\message)     // Teksti
+            EndIf
+            
+            // Poistetaan lopuksi viesti
+            Delete msg
+        EndIf
+    Next msg
+    
+    _Net_PutByte(NET_END)               // Viestin loppu
+    ServerSend()                        // L‰hetys
+EndFunction
+
+
+//================================================================================
+// Tarkistetaan onko client l‰hett‰nyt mit‰‰n dataa m‰‰r‰aikaan.
+//================================================================================
+Function CheckClients()
+    For client.CLIENTS = Each CLIENTS
+        // Jos clientilt‰ ei ole viiteen sekuntiin tullut dataa niin se poistetaan
+        // koska voidaan olettaa ett‰ client-ohjelma on sammutettu tai kaatunut.
+        If client\lastActivity + 5000 < Timer() Then
+            DeleteClient(client\clientId)
+        EndIf
+    Next client
+EndFunction
+
+
+//================================================================================
+// L‰hetet‰‰n normaali tekstiviesti kaikille clienteille.
+// Tai oikeastaan t‰s‰ ei l‰hetet‰ mit‰‰n vaan ainoastaan lis‰t‰‰n l‰hetett‰v‰
+// data MESSAGES-kokoelmaan josta se palautetaan clientille sitten kun se seuraavan 
+// kerran ottaa yhteytt‰.
+//================================================================================
+Function SendTextToClients(_text$, _toClient$ = "")
+    // L‰hetet‰‰n teksti clienteille
+    For client.CLIENTS = Each CLIENTS
+        If _toClient = "" Or _toClient = client\clientId Then
+            msg.MESSAGES    = New(MESSAGES)
+            msg\clientId    = client\clientId       // Kenelle l‰hetet‰‰n
+            msg\msgType     = NET_TEXT_MESSAGE      // Viestin tyyppi
+            msg\message     = _text                 // L‰hetett‰v‰ teksti
+            msg\senderId    = NET_ClientId          // L‰hett‰j‰
+        EndIf
+    Next client
+EndFunction
+
+
