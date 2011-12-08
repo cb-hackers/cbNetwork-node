@@ -11,7 +11,6 @@ var dgram = require('dgram'),
 
 function cbServer(port) {
   var self = this;
-  this.connections = [];
   this.sock = dgram.createSocket('udp4', function (msg, peer) {
     peer.id = peer.address + ':' + peer.port;
     var data = new Net(new Buffer(msg)); // Get a REAL Buffer from the ugly SlowBuffer :S
