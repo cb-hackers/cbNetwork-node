@@ -1,5 +1,5 @@
 // Requires cbNetwork
-var cbNetwork = require('../src/cbNetwork');
+var cbNetwork = require('../../src/cbNetwork');
 var Net = cbNetwork.MemBlock.Net;
 
 var clients = [];
@@ -20,8 +20,6 @@ var NET = {
   IDLE: 7,
   END: 255
 };
-
-//console.log(cbNetwork);
 
 // Create a server
 var server = new cbNetwork.Server.createServer(1337);

@@ -1,7 +1,7 @@
 SCREEN 640, 480
 
-Include "../../libs/cbNetwork.cb"
-Include "../../libs/ChatUtil.cb"
+Include "cbNetwork.cb"
+Include "ChatUtil.cb"
 
 SetWindow "CB-Chat (client)"
 
