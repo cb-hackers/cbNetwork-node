@@ -1,5 +1,12 @@
 A Node.js implementation of cbNetwork
 =====================================
+Philosophy
+----------
+You might think we are crazy, but I think this is a nice project to learn how to use Node and perhaps encourages CoolBasic people to venture out.
+
+We try to keep the API similar to the original cbNetwork's, but because of the asynchronous nature of Node we must do things little differently.
+For example we don't do ```ServerRead()```, but we listen on new messages like this: ```server.on('message', function (data, client) { /* Let's get this done with */ });```
+And we don't have globals like ```_Net_GetByte()```, we use the data parameter from the message event: ```data.getByte();``` For more see the documentation (once we make one)!
 
 Coding conventions
 ------------------
