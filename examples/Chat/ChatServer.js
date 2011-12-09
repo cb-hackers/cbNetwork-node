@@ -41,6 +41,7 @@ server.on('message', function (data, client) {
       if (name.trim() === '') {
         console.log('Login failed! Nickname is invalid.');
         var reply = new Net(2);
+        reply.id = data.id;
         reply.byte = NET.LOGIN_FAILED;
         reply.byte = NET.END;
         server.send(reply, client);
@@ -51,6 +52,7 @@ server.on('message', function (data, client) {
       createClient(client.id, name);
       // Let's send a packet telling everything went better than expected.png
       var reply = new Net();
+      reply.id = data.id;
       reply.byte = NET.LOGIN_OK;
       
       // Also send all client's info
@@ -102,6 +104,7 @@ server.on('message', function (data, client) {
   
   // Then send all messages that belong to this client
   var reply = new Net();
+  reply.id = data.id;
   for (var i = 0; i < messages.length; i++) {
     if (messages[i].ID === client.id) {
       // Set the type of the message

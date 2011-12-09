@@ -18,7 +18,7 @@ function Net (input) {
   } else if (input instanceof Buffer) {
     this.memBlock = input;
   } else {
-    this.memBlock = new Buffer(0);
+    this.memBlock = new Buffer(4);
   }
   this.offset = 4;
 };
@@ -66,6 +66,13 @@ Net.prototype.__defineGetter__('string', function () {
   return str;
 });
 
+/**
+ * Gets the client id, which is the first integer in memblock
+ */
+Net.prototype.__defineGetter__('id', function (value) {
+  return this.memBlock.readInt32LE(0);
+});
+
 ////////////////////////////
 /////////////////// SETTERS
 ////////////////////////////
@@ -99,4 +106,11 @@ Net.prototype.__defineSetter__('string', function (value) {
   this.resize(len); // Resize memBlock if needed
   this.memBlock.write(value, this.offset, this.offset + len, 'ascii');
   this.offset += len;
+});
+
+/**
+ * Puts the client id as the first integer in the memblock.
+ */
+Net.prototype.__defineSetter__('id', function (value) {
+  this.memBlock.writeInt32LE(value, 0);
 });

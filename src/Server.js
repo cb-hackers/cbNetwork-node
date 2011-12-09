@@ -9,11 +9,19 @@ var dgram = require('dgram'),
   EventEmitter = process.EventEmitter,
   Net = require('./MemBlock').Net;
 
+// Ugly, but hopefully works. TODO: Create a class for cbServer
+var cbServerClientCounter = 0;
+
 function cbServer(port, address) {
   var self = this;
-  this.sock = dgram.createSocket('udp4', function (msg, peer) {
-    peer.id = peer.address + ':' + peer.port;
+  this.sock = dgram.createSocket('udp4');
+  this.sock.on('message', function (msg, peer) {
     var data = new Net(new Buffer(msg)); // Get a REAL Buffer from the ugly SlowBuffer :S
+    if( data.id === 0 ) {
+      console.log('Truly a new client');
+      data.id = ++cbServerClientCounter;
+    }
+    peer.id = peer.address + ':' + data.id;
     self.emit('message', data, peer);
   });
   this.sock.on('error', function (e) {
