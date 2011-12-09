@@ -3,7 +3,7 @@ var cbNetwork = require('../../src/cbNetwork');
 var Net = cbNetwork.MemBlock.Net;
 var argv = require('optimist')
     .default({p : 1337, a : undefined})
-    .alias({'p' : 'port', 'a' : 'alias'})
+    .alias({'p' : 'port', 'a' : 'alias', 'd' : 'debug'})
     .argv;
 
 var clients = [];
@@ -31,8 +31,11 @@ var server = new cbNetwork.Server.createServer(argv.p, argv.a);
 
 // Handle messages from clients
 server.on('message', function (data, client) {
-  console.log('________________________________________________________________________________');
-  console.log(client.id);
+  if( argv.d ) {
+    // Only log if debug flag is on
+    console.log('________________________________________________________________________________');
+    console.log(client.id);
+  }
   // Packet based on the first byte
   var netMsg = data.byte;
   switch (netMsg) {
