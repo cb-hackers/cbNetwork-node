@@ -3,7 +3,7 @@ var cbNetwork = require('../../src/cbNetwork');
 var Net = cbNetwork.MemBlock.Net;
 var argv = require('optimist')
     .default({p : 1337, a : undefined})
-    .alias({'p' : 'port', 'a' : 'alias', 'd' : 'debug'})
+    .alias({'p' : 'port', 'a' : 'address', 'd' : 'debug'})
     .argv;
 
 var clients = [];
