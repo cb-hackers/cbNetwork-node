@@ -9,7 +9,7 @@ var dgram = require('dgram'),
   EventEmitter = process.EventEmitter,
   Net = require('./MemBlock').Net;
 
-function cbServer(port) {
+function cbServer(port, address) {
   var self = this;
   this.sock = dgram.createSocket('udp4', function (msg, peer) {
     peer.id = peer.address + ':' + peer.port;
@@ -25,7 +25,10 @@ function cbServer(port) {
     console.log('UDP CLOSED');
     console.log(e);
   });
-  this.sock.bind(port);
+  this.sock.bind(port, address);
+  
+  var addr = this.sock.address();
+  console.log("cbServer listening on " + addr.address + ":" + addr.port);
 }
 
 cbServer.prototype.__proto__ = EventEmitter.prototype;

@@ -1,6 +1,10 @@
-// Requires cbNetwork
+// Requires cbNetwork and node-optimist: https://github.com/substack/node-optimist
 var cbNetwork = require('../../src/cbNetwork');
 var Net = cbNetwork.MemBlock.Net;
+var argv = require('optimist')
+    .default({p : 1337, a : undefined})
+    .alias({'p' : 'port', 'a' : 'alias'})
+    .argv;
 
 var clients = [];
 var messages = [];
@@ -21,8 +25,9 @@ var NET = {
   END: 255
 };
 
-// Create a server
-var server = new cbNetwork.Server.createServer(1337);
+// Create a server on a port specified in command line or if not specified, use the default 1337
+var server = new cbNetwork.Server.createServer(argv.p, argv.a);
+
 
 // Handle messages from clients
 server.on('message', function (data, client) {
@@ -60,10 +65,12 @@ server.on('message', function (data, client) {
       break;
     case NET.LOGOUT:
       deleteClient(client.id);
-      break;
+      return;
+    /* 
     default:
-      console.log('UNIMPLEMENDED');
+      console.log('UNIMPLEMENTED');
       console.log(data.memBlock);
+    */
   }
   
   // Update the sender's timestamp
@@ -78,13 +85,16 @@ server.on('message', function (data, client) {
     switch (netMsg) {
       case NET.TEXT_MESSAGE:
         sendText(data.string, client.id);
-      break;
+        break;
       case NET.END:
         // OK!
+        break;
       case NET.IDLE:
         // Well thanks for the info!
+        break;
       default:
         console.log('UNKOWN MESSAGE');
+        console.log('Message-ID: ' + netMsg);
     }
     // Read next message's type
     netMsg = data.byte;
@@ -110,7 +120,7 @@ server.on('message', function (data, client) {
       }
 
       // Delete the message
-      messages.splice(i, 1);    
+      messages.splice(i, 1);
     }
   }
   reply.byte = NET.END;
