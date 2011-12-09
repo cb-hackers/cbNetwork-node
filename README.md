@@ -18,3 +18,18 @@ Coding conventions
 * Column limit is 100, but it is not enforced - so no stupid midstatement newlines!
 * Document your functions, classes, methods and complex structures with jsdoc-toolkit
   - see [here](http://code.google.com/p/jsdoc-toolkit/wiki/TagReference) for a reference of tags
+
+cbNetwork internal data schema
+------------------------------
+1. Client connects to server
+   * first 4 bytes: 00 00 00 00
+2. Server responds
+   * Server generates a client id (for example, 01 00 00 00)
+   * first 4 bytes: client id
+3. Client is connected and sends more data
+   * first 4 bytes: client id received from server (for example, 01 00 00 00)
+4. Server responds
+   * first 4 bytes: client id, already generated
+5. Client sends data:
+   * first 4 bytes: the same client id
+6. and so on and so forth.
