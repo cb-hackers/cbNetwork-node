@@ -1,6 +1,6 @@
 // Requires cbNetwork and node-optimist: https://github.com/substack/node-optimist
 var cbNetwork = require('../../src/cbNetwork');
-var Net = cbNetwork.MemBlock.Net;
+var Packet = cbNetwork.Packet;
 var argv = require('optimist')
     .default({p : 1337, a : undefined})
     .alias({'p' : 'port', 'a' : 'address', 'd' : 'debug'})
@@ -9,10 +9,6 @@ var argv = require('optimist')
 var clients = [];
 var messages = [];
 
-// Default configs
-var config = {
-  port: 1337
-};
 // Some constants
 var NET = {
   LOGIN: 1,
@@ -26,50 +22,50 @@ var NET = {
 };
 
 // Create a server on a port specified in command line or if not specified, use the default 1337
-var server = new cbNetwork.Server.createServer(argv.p, argv.a);
+var server = new cbNetwork.Server(argv.p, argv.a);
 
 
 // Handle messages from clients
-server.on('message', function (data, client) {
+server.on('message', function (data) {
   if( argv.d ) {
     // Only log if debug flag is on
     console.log('________________________________________________________________________________');
-    console.log(client.id);
+    console.log(data);
   }
   // Packet based on the first byte
-  var netMsg = data.byte;
+  var netMsg = data.getByte();
   switch (netMsg) {
     case NET.LOGIN:
-      var name = data.string;
+      var name = data.getString();
       if (name.trim() === '') {
         console.log('Login failed! Nickname is invalid.');
-        var reply = new Net(2);
-        reply.id = data.id;
-        reply.byte = NET.LOGIN_FAILED;
-        reply.byte = NET.END;
-        server.send(reply, client);
+        var reply = new Packet(2);
+        reply.id = data.clientId;
+        reply.putByte(NET.LOGIN_FAILED);
+        reply.putByte(NET.END);
+        server.send(reply);
         return;
       }
       // Nice a new chatter! Let's add him/her to the client list
       console.log(name + ' just entered the chat!');
-      createClient(client.id, name);
+      createClient(data.clientId, name);
       // Let's send a packet telling everything went better than expected.png
-      var reply = new Net();
-      reply.id = data.id;
-      reply.byte = NET.LOGIN_OK;
+      var reply = new Packet();
+      reply.clientId = data.clientId;
+      reply.putByte(NET.LOGIN_OK);
       
       // Also send all client's info
       for (var i = 0; i < clients.length; i++) {
-        reply.byte = NET.CLIENT_INFO;
-        reply.string = clients[i].id;
-        reply.string = clients[i].nick;
+        reply.putByte(NET.CLIENT_INFO);
+        reply.putString(clients[i].id);
+        reply.putString(clients[i].nick);
       }
       // Aand it's gone!
-      reply.byte = NET.END;
-      server.send(reply, client);
+      reply.putByte(NET.END);
+      server.send(reply);
       break;
     case NET.LOGOUT:
-      deleteClient(client.id);
+      deleteClient(data.clientId);
       return;
     /* 
     default:
@@ -80,7 +76,7 @@ server.on('message', function (data, client) {
   
   // Update the sender's timestamp
   for (var i = 0; i < clients.length; i++) {
-    if (client.id !== clients[i].id) {
+    if (data.clientId !== clients[i].id) {
       clients[i].lastActivity = new Date().getTime();
     }
   }
@@ -89,7 +85,7 @@ server.on('message', function (data, client) {
   while (netMsg) {
     switch (netMsg) {
       case NET.TEXT_MESSAGE:
-        sendText(data.string, client.id);
+        sendText(data.getString(), data.clientId);
         break;
       case NET.END:
         // OK!
@@ -102,35 +98,41 @@ server.on('message', function (data, client) {
         console.log('Message-ID: ' + netMsg);
     }
     // Read next message's type
-    netMsg = data.byte;
+    netMsg = data.getByte();
   }
   
   // Then send all messages that belong to this client
-  var reply = new Net();
-  reply.id = data.id;
+  var reply = new Packet();
+  reply.clientId = data.clientId;
   for (var i = 0; i < messages.length; i++) {
-    if (messages[i].ID === client.id) {
+    if (messages[i].ID === data.clientId) {
       // Set the type of the message
-      reply.byte = messages[i].msgType;
+      reply.putByte(messages[i].msgType);
       // Set sender ID of the message
-      reply.string = messages[i].senderID;
+      reply.putString(messages[i].senderID);
+      
+      if (messages[i].msgType === NET.LOGIN ||
+          messages[i].msgType === NET.TEXT_MESSAGE) {
+        reply.putString(messages[i].message);
+      }
+      /*
       switch (messages[i].msgType) {
         case NET.LOGIN:
           // Who logged in?
-          reply.string = messages[i].message;
+          reply.putString(messages[i].message);
           break;
         case NET.TEXT_MESSAGE:
           // What was said?
-          reply.string = messages[i].message;
+          reply.putString(messages[i].message);
           break;
       }
-
+      */
       // Delete the message
       messages.splice(i, 1);
     }
   }
-  reply.byte = NET.END;
-  server.send(reply, client);
+  reply.putByte(NET.END);
+  server.send(reply);
   
 });
 

@@ -1,3 +1,3 @@
 exports.HTTP = require('./HTTP');
-exports.Server = require('./Server');
-exports.MemBlock = require('./MemBlock');
+exports.Server = require('./Server').initServer;
+exports.Packet = require('./Packet').Packet;
