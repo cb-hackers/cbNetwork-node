@@ -46,10 +46,7 @@ Packet.prototype.resize = function (size) {
  * Returns an unsigned byte from the memblock and moves the offset accordingly
  */
 Packet.prototype.getByte = function () {
-  // Must check for signed bit, because we want an unsigned byte
-  /*return (this.memBlock[this.offset] >> 7 & 0xFF) ?
-    this.memBlock[this.offset++] : this.memBlock[this.offset++] - 128;*/
-  return this.memBlock[this.offset++]; // TODO: This should work, needs proper testing!
+  return this.memBlock[this.offset++];
 };
 
 /**
@@ -57,7 +54,6 @@ Packet.prototype.getByte = function () {
  */
 Packet.prototype.getInt = function () {
   this.offset += 4;
-  console.log(this);
   return this.memBlock.readUInt32LE(this.offset - 4);
 };
 
@@ -108,7 +104,7 @@ Packet.prototype.putInt = function (value) {
 Packet.prototype.putString = function (value) {
   if ('string' !== typeof value) {throw TypeError('Value must be a string');}
   var len = value.length;
-  this.puInt(len);
+  this.putInt(len);
   this.resize(len); // Resize memBlock if needed
   this.memBlock.write(value, this.offset, this.offset + len, 'ascii');
   this.offset += len;

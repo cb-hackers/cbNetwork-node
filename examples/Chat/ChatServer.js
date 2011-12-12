@@ -26,66 +26,56 @@ var server = new cbNetwork.Server(argv.p, argv.a);
 
 
 // Handle messages from clients
-server.on('message', function (data) {
-  if( argv.d ) {
-    // Only log if debug flag is on
-    console.log('________________________________________________________________________________');
-    console.log(data);
-  }
+server.on('message', function (client) {
+  var data = client.data;
   // Packet based on the first byte
   var netMsg = data.getByte();
   switch (netMsg) {
     case NET.LOGIN:
       var name = data.getString();
       if (name.trim() === '') {
-        console.log('Login failed! Nickname is invalid.');
+        console.log(client.id + ': Login failed! Nickname is invalid.');
         var reply = new Packet(2);
-        reply.id = data.clientId;
         reply.putByte(NET.LOGIN_FAILED);
         reply.putByte(NET.END);
-        server.send(reply);
+        client.reply(reply);
         return;
       }
       // Nice a new chatter! Let's add him/her to the client list
-      console.log(name + ' just entered the chat!');
-      createClient(data.clientId, name);
+      console.log(name + ' <' + client.id + '> just entered the chat!');
+      createClient(client.id, name);
       // Let's send a packet telling everything went better than expected.png
       var reply = new Packet();
-      reply.clientId = data.clientId;
       reply.putByte(NET.LOGIN_OK);
-      
+
       // Also send all client's info
       for (var i = 0; i < clients.length; i++) {
         reply.putByte(NET.CLIENT_INFO);
-        reply.putString(clients[i].id);
+        reply.putString('' + clients[i].id);
         reply.putString(clients[i].nick);
       }
       // Aand it's gone!
       reply.putByte(NET.END);
-      server.send(reply);
-      break;
-    case NET.LOGOUT:
-      deleteClient(data.clientId);
+      client.reply(reply);
       return;
-    /* 
-    default:
-      console.log('UNIMPLEMENTED');
-      console.log(data.memBlock);
-    */
+    case NET.LOGOUT:
+      console.log(client.id + ' logged out.');
+      deleteClient(client.id);
+      return;
   }
-  
+
   // Update the sender's timestamp
   for (var i = 0; i < clients.length; i++) {
-    if (data.clientId !== clients[i].id) {
+    if (client.id !== clients[i].id) {
       clients[i].lastActivity = new Date().getTime();
     }
   }
-  
+
   // Check rest of the messages
   while (netMsg) {
     switch (netMsg) {
       case NET.TEXT_MESSAGE:
-        sendText(data.getString(), data.clientId);
+        sendText(data.getString(), client.id);
         break;
       case NET.END:
         // OK!
@@ -100,40 +90,28 @@ server.on('message', function (data) {
     // Read next message's type
     netMsg = data.getByte();
   }
-  
+
   // Then send all messages that belong to this client
   var reply = new Packet();
-  reply.clientId = data.clientId;
   for (var i = 0; i < messages.length; i++) {
-    if (messages[i].ID === data.clientId) {
+    if (messages[i].ID === client.id) {
       // Set the type of the message
       reply.putByte(messages[i].msgType);
       // Set sender ID of the message
-      reply.putString(messages[i].senderID);
-      
+      reply.putString('' + messages[i].senderID);
+
       if (messages[i].msgType === NET.LOGIN ||
           messages[i].msgType === NET.TEXT_MESSAGE) {
         reply.putString(messages[i].message);
       }
-      /*
-      switch (messages[i].msgType) {
-        case NET.LOGIN:
-          // Who logged in?
-          reply.putString(messages[i].message);
-          break;
-        case NET.TEXT_MESSAGE:
-          // What was said?
-          reply.putString(messages[i].message);
-          break;
-      }
-      */
+
       // Delete the message
       messages.splice(i, 1);
     }
   }
   reply.putByte(NET.END);
-  server.send(reply);
-  
+  client.reply(reply);
+
 });
 
 function createClient(clientID, name) {
@@ -154,7 +132,7 @@ function createClient(clientID, name) {
       return;
     }
   }
-  
+
   // Create a new client too
   clients.push({
     id: clientID,
@@ -189,6 +167,7 @@ function deleteClient(clientID) {
 }
 
 function sendText(text, clientID, toClient) {
+  console.log('<' + clientID + '> ' + text);
   // Create new messages to the queue for all clients
   for (var i = 0; i < clients.length; i++) {
     if (!toClient || toClient === clients[i].id) {
