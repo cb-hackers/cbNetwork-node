@@ -10,6 +10,7 @@ And we don't have globals like ```_Net_GetByte()```, we use the data parameter f
 
 Coding conventions
 ------------------
+* Line-endings are UNIX-like LF or \n but CoolBasic files use Windows-like CRLF or \r\n
 * No tabs; use 2 spaces instead.
 * Variables and functions use camelCaps, so the first letter is lowercase and
   the following words have their first letter in uppercase.
