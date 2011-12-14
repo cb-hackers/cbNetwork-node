@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - _global_</title>
+		<title>JsDoc Reference - Client</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -191,6 +191,12 @@ ul.inheritsList
 	
 	<li><i><a href="../symbols/_global_.html">_global_</a></i></li>
 	
+	<li><a href="../symbols/Client.html">Client</a></li>
+	
+	<li><a href="../symbols/Packet.html">Packet</a></li>
+	
+	<li><a href="../symbols/Server.html">Server</a></li>
+	
 </ul>
 <hr />
 			<!-- end publish.classesIndex -->
@@ -200,7 +206,7 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Built-In Namespace _global_
+				Class Client
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
@@ -211,57 +217,42 @@ ul.inheritsList
 				
 				
 				
+					<br /><i>Defined in: </i> <a href="../symbols/src/src_Server.js.html">Server.js</a>.
+				
 			</p>
 
 <!-- ============================== constructor summary ==================== -->			
 			
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class Client.">
+				<caption>Class Summary</caption>
+				<thead>
+					<tr>
+						<th scope="col">Constructor Attributes</th>
+						<th scope="col">Constructor Name and Description</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="attributes">&nbsp;</td>
+						<td class="nameDescription" >
+							<div class="fixedFont">
+								<b><a href="../symbols/Client.html#constructor">Client</a></b>(address, port, id, sock)
+							</div>
+							<div class="description"></div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
 
 <!-- ============================== properties summary ===================== -->
-			
-				
-				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class _global_.">
-					<caption>Field Summary</caption>
-					<thead>
-						<tr>
-							<th scope="col">Field Attributes</th>
-							<th scope="col">Field Name and Description</th>
-						</tr>
-					</thead>
-					<tbody>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">
-								<b><a href="../symbols/_global_.html#dgram">dgram</a></b>
-								</div>
-								<div class="description">Server is an UDP server using Node's UDP API that works like the cbNetwork server.</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">
-								<b><a href="../symbols/_global_.html#http">http</a></b>
-								</div>
-								<div class="description">HTTP abstraction that works like cbNetwork equivalent</div>
-							</td>
-						</tr>
-					
-					</tbody>
-				</table>
-				
-				
-				
 			
 
 <!-- ============================== methods summary ======================== -->
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class _global_.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class Client.">
 					<caption>Method Summary</caption>
 					<thead>
 						<tr>
@@ -274,25 +265,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#Client">Client</a></b>(address, port, id, sock)
-								</div>
-								<div class="description"></div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#Packet">Packet</a></b>(input)
-								</div>
-								<div class="description">Creates a new Buffer.</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#Server">Server</a></b>(port, address)
+								<div class="fixedFont"><b><a href="../symbols/Client.html#reply">reply</a></b>(data)
 								</div>
 								<div class="description"></div>
 							</td>
@@ -309,63 +282,64 @@ ul.inheritsList
 
 <!-- ============================== constructor details ==================== -->		
 			
-
-<!-- ============================== field details ========================== -->		
-			
+			<div class="details"><a name="constructor"> </a>
 				<div class="sectionTitle">
-					Field Detail
+					Class Detail
 				</div>
 				
-					<a name="dgram"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>dgram</b>
-					
-					</div>
-					<div class="description">
-						Server is an UDP server using Node's UDP API that works like the cbNetwork server.
-						
-							<br />
-							<i>Defined in: </i> <a href="../symbols/src/src_Server.js.html">Server.js</a>.
-						
-						<br /><i>Author: </i>Ville "tuhoojabotti" Lahdenvuo.
-					</div>
-					
-					
-
-						
-						
-						
-						
-
-					<hr />
+				<div class="fixedFont">
+						<b>Client</b>(address, port, id, sock)
+				</div>
 				
-					<a name="http"> </a>
-					<div class="fixedFont">
+				<div class="description">
 					
 					
-					<b>http</b>
-					
-					</div>
-					<div class="description">
-						HTTP abstraction that works like cbNetwork equivalent
-						
-							<br />
-							<i>Defined in: </i> <a href="../symbols/src/src_HTTP.js.html">HTTP.js</a>.
-						
-						<br /><i>Author: </i>Ville "tuhoojabotti" Lahdenvuo.
-					</div>
-					
-					
-
-						
-						
-						
-						
-
-					
+				</div>
 				
+				
+				
+				
+					
+						<dl class="detailList">
+						<dt class="heading">Parameters:</dt>
+						
+							<dt>
+								 <b>address</b>
+								
+							</dt>
+								<dd></dd>
+						
+							<dt>
+								 <b>port</b>
+								
+							</dt>
+								<dd></dd>
+						
+							<dt>
+								 <b>id</b>
+								
+							</dt>
+								<dd></dd>
+						
+							<dt>
+								 <b>sock</b>
+								
+							</dt>
+								<dd></dd>
+						
+						</dl>
+					
+					
+					
+					
+					
+					
+					
+
+			</div>
+			
+
+<!-- ============================== field details ========================== -->		
 			
 
 <!-- ============================== method details ========================= -->		
@@ -374,18 +348,15 @@ ul.inheritsList
 					Method Detail
 				</div>
 				
-					<a name="Client"> </a>
+					<a name="reply"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>Client</b>(address, port, id, sock)
+					<b>reply</b>(data)
 					
 					</div>
 					<div class="description">
 						
-						
-							<br />
-							<i>Defined in: </i> <a href="../symbols/src/src_Server.js.html">Server.js</a>.
 						
 						
 					</div>
@@ -397,109 +368,7 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>address</b>
-									
-								</dt>
-								<dd></dd>
-							
-								<dt>
-									<b>port</b>
-									
-								</dt>
-								<dd></dd>
-							
-								<dt>
-									<b>id</b>
-									
-								</dt>
-								<dd></dd>
-							
-								<dt>
-									<b>sock</b>
-									
-								</dt>
-								<dd></dd>
-							
-							</dl>
-						
-						
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name="Packet"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>Packet</b>(input)
-					
-					</div>
-					<div class="description">
-						Creates a new Buffer.
-						
-							<br />
-							<i>Defined in: </i> <a href="../symbols/src/src_Packet.js.html">Packet.js</a>.
-						
-						
-					</div>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{Number|Buffer}</span> <b>input</b>
-									
-								</dt>
-								<dd>is the size in bytes to be allocated</dd>
-							
-							</dl>
-						
-						
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name="Server"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>Server</b>(port, address)
-					
-					</div>
-					<div class="description">
-						
-						
-							<br />
-							<i>Defined in: </i> <a href="../symbols/src/src_Server.js.html">Server.js</a>.
-						
-						
-					</div>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<b>port</b>
-									
-								</dt>
-								<dd></dd>
-							
-								<dt>
-									<b>address</b>
+									<b>data</b>
 									
 								</dt>
 								<dd></dd>
@@ -527,7 +396,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Dec 14 2011 18:55:23 GMT+0200 (EET)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Dec 14 2011 22:59:11 GMT+0200 (EET)
 		</div>
 	</body>
 </html>

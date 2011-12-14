@@ -5,6 +5,7 @@
  * @author Ville "tuhoojabotti" Lahdenvuo
  */
 
+/** @ignore */
 var http = require('http'),
   urlParser = require('url');
 

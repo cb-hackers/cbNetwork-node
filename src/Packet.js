@@ -1,16 +1,16 @@
 /**
- * Packet is used to emulate CoolBasic MemBlock-system that is used in cbNetwork for packet data
- *
- * @author Ville "tuhoojabotti" Lahdenvuo
- */
+* Packet is used to emulate CoolBasic MemBlock-system that is used in cbNetwork for packet data.
+*/
 
 exports.Packet = Packet;
 
 /**
- * Creates a new Buffer.
- *
- * @param {Number|Buffer} input  is the size in bytes to be allocated
- */
+* Creates a new Buffer.
+*
+* @param {Number|Buffer} input  the size in bytes to be allocated. The actual size of allocation
+*                               will actually be the given size + 4 bytes because of internal use.
+* @constructor
+*/
 function Packet (input) {
   // If it's a number
   if ('number' === typeof input) {
@@ -27,7 +27,7 @@ function Packet (input) {
 /**
  * Increases the size of the memBlock by the given one. This only allows increasing the size.
  *
- * @param {Number} size  is the new size in bytes added to the offset
+ * @param {Number} size  the new size in bytes added to the offset if needed
  */
 Packet.prototype.resize = function (size) {
   // Only allow increasement
@@ -68,21 +68,21 @@ Packet.prototype.getString = function () {
 };
 
 /**
- * Gets the client id, which is the first integer in memblock
+ * Gets the client id, which is the first integer in memblock.
  */
 Packet.prototype.__defineGetter__('clientId', function (value) {
   return this.memBlock.readInt32LE(0);
 });
 
 ////////////////////////////
-/////////////////// PUTTERS :P
+///////////////// PUTTERS :P
 ////////////////////////////
 // TODO: Add checks for values e.g. byte is 0-255
 
 /**
  * Puts a byte to the memblock and moves the offset accordingly
  *
- * @param data  byte to write 0-255 
+ * @param {Number} value  byte to write, must be in range 0...255 
  */
 Packet.prototype.putByte = function (value) {
   this.resize(1); // Resize memBlock if needed
@@ -91,6 +91,8 @@ Packet.prototype.putByte = function (value) {
 
 /**
  * Puts an int to the memblock and moves the offset accordingly
+ *
+ * @param {Number} value  a 32-bit integer to write to memblock
  */
 Packet.prototype.putInt = function (value) {
   this.resize(4); // Resize memBlock if needed
@@ -100,6 +102,8 @@ Packet.prototype.putInt = function (value) {
 
 /**
  * Puts a string to the memblock and moves the offset accordingly
+ *
+ * @param {String} value  the string to be put to the memblock
  */
 Packet.prototype.putString = function (value) {
   if ('string' !== typeof value) {throw TypeError('Value must be a string');}

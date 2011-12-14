@@ -5,10 +5,12 @@
  * @author Ville "tuhoojabotti" Lahdenvuo
  */
 
+/** @ignore */
 var dgram = require('dgram'), 
   EventEmitter = process.EventEmitter,
   Packet = require('./Packet').Packet;
 
+/** @constructor */
 function Client(address, port, id, sock) {
   this.address = address;
   this.port = port;
@@ -25,6 +27,7 @@ Client.prototype.reply = function (data) {
   });
 };
 
+/** @constructor */
 function Server(port, address) {
   var self = this;
   this.clients = [];
