@@ -1,5 +1,0 @@
-## NEVER EVER put executables to the repository
-*.exe
-
-## Stupid windows.
-Thumbs.db
