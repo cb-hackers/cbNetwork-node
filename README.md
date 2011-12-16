@@ -8,6 +8,13 @@ We try to keep the API similar to the original cbNetwork's, but because of the a
 For example we don't do ```ServerRead()```, but we listen on new messages like this: ```server.on('message', function (data, client) { /* Let's get this done with */ });```
 And we don't have globals like ```_Net_GetByte()```, we use the data parameter from the message event: ```data.getByte();``` For more, [see the documentation](http://vesq.github.com/cbNetwork-node/doc/index.html).
 
+TODO
+----
+* Logging improvements
+* Error handling
+* Unit testing
+* Examples
+
 Coding conventions
 ------------------
 * Line-endings are UNIX-like LF or \n but CoolBasic files use Windows-like CRLF or \r\n
