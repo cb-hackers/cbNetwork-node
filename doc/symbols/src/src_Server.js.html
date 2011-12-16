@@ -30,7 +30,7 @@
 <span class='line'> 23</span> </span><span class="WHIT">  </span><span class="NAME">this.address</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">address</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 24</span> </span><span class="WHIT">  </span><span class="NAME">this.port</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">port</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 25</span> </span><span class="WHIT">  </span><span class="NAME">this.id</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">id</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 26</span> </span><span class="WHIT">  </span><span class="NAME">this.data</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 26</span> </span><span class="WHIT">  </span><span class="NAME">this.data</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 27</span> </span><span class="WHIT">  </span><span class="NAME">this.sock</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">sock</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 28</span> </span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'> 29</span> 
@@ -42,7 +42,7 @@
 <span class='line'> 35</span> </span><span class="NAME">Client.prototype.reply</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">data</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'> 36</span> </span><span class="WHIT">  </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">data</span><span class="WHIT"> </span><span class="KEYW">instanceof</span><span class="WHIT"> </span><span class="NAME">Packet</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">'Data must be a Packet object.'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'> 37</span> </span><span class="WHIT">  </span><span class="NAME">data.clientId</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.id</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 38</span> </span><span class="WHIT">  </span><span class="NAME">this.sock._send</span><span class="PUNC">(</span><span class="NAME">data.memBlock</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">data.memBlock.length</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.port</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.address</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 38</span> </span><span class="WHIT">  </span><span class="NAME">this.sock.send</span><span class="PUNC">(</span><span class="NAME">data.memBlock</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">data.memBlock.length</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.port</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.address</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'> 39</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="PUNC">}</span><span class="WHIT">
 <span class='line'> 40</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 41</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
@@ -96,32 +96,18 @@
 <span class='line'> 89</span> </span><span class="NAME">Server.prototype.__proto__</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">EventEmitter.prototype</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 90</span> 
 <span class='line'> 91</span> </span><span class="COMM">/** 
-<span class='line'> 92</span>  * Server send for internal use. &lt;code>Client.reply&lt;/code> utilizes this function.
+<span class='line'> 92</span>  * Server calls this event on new messages. You can hook to it like this:
 <span class='line'> 93</span>  *
-<span class='line'> 94</span>  * @param {Packet} data     Data to send to client
-<span class='line'> 95</span>  * @param {String} address  Client's address
-<span class='line'> 96</span>  * @param {Number} port     Client's port
-<span class='line'> 97</span>  */</span><span class="WHIT">
-<span class='line'> 98</span> </span><span class="NAME">Server.prototype._send</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">data</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">address</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">port</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 99</span> </span><span class="WHIT">  </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">data</span><span class="WHIT"> </span><span class="KEYW">instanceof</span><span class="WHIT"> </span><span class="NAME">Packet</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">'Data must be a Packet object.'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>100</span> </span><span class="WHIT">  </span><span class="NAME">this.sock.send</span><span class="PUNC">(</span><span class="NAME">data.memBlock</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">data.memBlock.length</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">port</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">address</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>101</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>102</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>103</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 94</span>  * @example 
+<span class='line'> 95</span>  * Server.on('message', function (client) { 
+<span class='line'> 96</span>  *   // simple echo server example
+<span class='line'> 97</span>  *   client.reply(client.data);
+<span class='line'> 98</span>  * }
+<span class='line'> 99</span>  *
+<span class='line'>100</span>  * @name Server#message
+<span class='line'>101</span>  * @event
+<span class='line'>102</span>  * @param {Client} client  Client instance with all the information you need.
+<span class='line'>103</span>  */</span><span class="WHIT">
 <span class='line'>104</span> 
-<span class='line'>105</span> </span><span class="COMM">/** 
-<span class='line'>106</span>  * Server calls this event on new messages. You can hook to it like this:
-<span class='line'>107</span>  *
-<span class='line'>108</span>  * @example 
-<span class='line'>109</span>  * Server.on('message', function (client) { 
-<span class='line'>110</span>  *   // simple echo server example
-<span class='line'>111</span>  *   client.reply(client.data);
-<span class='line'>112</span>  * }
-<span class='line'>113</span>  *
-<span class='line'>114</span>  * @name Server#message
-<span class='line'>115</span>  * @event
-<span class='line'>116</span>  * @param {Client} client  Client instance with all the information you need.
-<span class='line'>117</span>  */</span><span class="WHIT">
-<span class='line'>118</span> 
-<span class='line'>119</span> </span><span class="NAME">exports.initServer</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Server</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>120</span> </span></pre></body></html>
+<span class='line'>105</span> </span><span class="NAME">exports.initServer</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Server</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>106</span> </span></pre></body></html>
