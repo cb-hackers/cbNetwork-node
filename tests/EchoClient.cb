@@ -1,0 +1,54 @@
+SCREEN 640, 480
+
+Include "../cbNetwork.cb"
+
+SetWindow "CB-Chat (client)"
+
+// K‰ynnistet‰‰n client.
+nRet = InitClient("84.20.150.46", 21522, 1000)
+If nRet <> 0 Then
+    // Tuli joku virhe
+    errMsg$ = "(" + nRet + ") " + GetNetErrorString(nRet)
+    MakeError errMsg 
+EndIf
+
+doItAgain:
+Cls
+
+Locate 0,13
+Repeat
+    Text 0,0,"What do you want to send?"
+    txtToSend$ = Input(">> ")
+    DrawScreen
+Until KeyHit(cbKeyReturn)
+CloseInput
+
+// Muistipalan alustus ensin
+_Net_InitMemBlock()
+
+_Net_PutString(txtToSend)
+ClientSend()
+
+nRet = ClientRead()
+
+// Lukemisessa tuli joku virhe
+If nRet <> 0 Then 
+    // Jos virhe oli "Connection timed out" niin ei v‰litet‰ siit‰
+    If nRet <> 10060 Then
+        errMsg$ = "(" + nRet + ") " + GetNetErrorString(nRet)
+        MakeError errMsg
+    EndIf
+EndIf
+
+// Muistipalan alussa on aina saapuneen datan pituus joka luetaan t‰ss‰ pois
+_Net_GetInt()
+
+msg$ = _Net_GetString()
+
+Repeat
+    Text 0,0,"Sent '" + txtToSend$ + "'"
+    Text 0,13,"Recv '" + msg$ + "'"
+    DrawScreen
+Until KeyHit(cbKeyReturn)
+
+Goto doItAgain
