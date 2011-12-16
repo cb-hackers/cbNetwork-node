@@ -9,7 +9,8 @@ var dgram = require('dgram'),
   EventEmitter = process.EventEmitter,
   Packet = require('./Packet').Packet;
 
-/** Client class includes client information, message and a reply function for convenience
+/** 
+ * Client class includes client information, message and a reply function for convenience
  *
  * @constructor
  * @param {String} address    Client's address
@@ -25,20 +26,23 @@ function Client(address, port, id, data, sock) {
   this.data;
   this.sock = sock;
 }
-/** Reply function replies to the client and automagically assigns correct client ID for the packet.
+
+/** 
+ * Reply function replies to the client and automagically assigns correct client ID for the packet.
  *
  * @param {Packet} data  Data to send to client
  */
 Client.prototype.reply = function (data) {
   if (!data instanceof Packet) {throw Error('Data must be a Packet object.');}
   data.clientId = this.id;
-  this.sock.send(data.memBlock, 0, data.memBlock.length, this.port, this.address, function (err) {
+  this.sock._send(data.memBlock, 0, data.memBlock.length, this.port, this.address, function (err) {
     if (err) {console.log(err);}
   });
 };
 
-/** Server is the heart of cbNetwork-node. It creates an UDP socket and listens to it.
- *  Automatically handling all client connections and calling 'message' event on new messages
+/**
+ * Server is the heart of cbNetwork-node. It creates an UDP socket and listens to it.
+ * Automatically handling all client connections and calling 'message' event on new messages
  *
  * @constructor
  * @param {Number} port       Port to bind to.
@@ -84,21 +88,30 @@ function Server(port, address) {
 
 Server.prototype.__proto__ = EventEmitter.prototype;
 
-/** Server send for internal use. Client.reply 
+/** 
+ * Server send for internal use. <code>Client.reply</code> utilizes this function.
  *
  * @param {Packet} data     Data to send to client
  * @param {String} address  Client's address
- * @param {Number} port     Clietn's port
+ * @param {Number} port     Client's port
  */
-Server.prototype.send = function (data, address, port) {
+Server.prototype._send = function (data, address, port) {
   if (!data instanceof Packet) {throw Error('Data must be a Packet object.');}
   this.sock.send(data.memBlock, 0, data.memBlock.length, port, address, function (err) {
     if (err) {console.log(err);}
   });
 };
 
-/** Server calls this event on new messages
- * @name message
+/** 
+ * Server calls this event on new messages. You can hook to it like this:
+ *
+ * @example 
+ * Server.on('message', function (client) { 
+ *   // simple echo server example
+ *   client.reply(client.data);
+ * }
+ *
+ * @name Server#message
  * @event
  * @param {Client} client  Client instance with all the information you need.
  */
