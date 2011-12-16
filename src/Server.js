@@ -23,7 +23,7 @@ function Client(address, port, id, data, sock) {
   this.address = address;
   this.port = port;
   this.id = id;
-  this.data;
+  this.data = data;
   this.sock = sock;
 }
 
@@ -35,7 +35,7 @@ function Client(address, port, id, data, sock) {
 Client.prototype.reply = function (data) {
   if (!data instanceof Packet) {throw Error('Data must be a Packet object.');}
   data.clientId = this.id;
-  this.sock._send(data.memBlock, 0, data.memBlock.length, this.port, this.address, function (err) {
+  this.sock.send(data.memBlock, 0, data.memBlock.length, this.port, this.address, function (err) {
     if (err) {console.log(err);}
   });
 };
@@ -87,20 +87,6 @@ function Server(port, address) {
 }
 
 Server.prototype.__proto__ = EventEmitter.prototype;
-
-/** 
- * Server send for internal use. <code>Client.reply</code> utilizes this function.
- *
- * @param {Packet} data     Data to send to client
- * @param {String} address  Client's address
- * @param {Number} port     Client's port
- */
-Server.prototype._send = function (data, address, port) {
-  if (!data instanceof Packet) {throw Error('Data must be a Packet object.');}
-  this.sock.send(data.memBlock, 0, data.memBlock.length, port, address, function (err) {
-    if (err) {console.log(err);}
-  });
-};
 
 /** 
  * Server calls this event on new messages. You can hook to it like this:
