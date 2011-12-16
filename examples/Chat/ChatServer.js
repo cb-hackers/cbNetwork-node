@@ -66,7 +66,7 @@ server.on('message', function (client) {
 
   // Update the sender's timestamp
   for (var i = 0; i < clients.length; i++) {
-    if (client.id !== clients[i].id) {
+    if (client.id === clients[i].id) {
       clients[i].lastActivity = new Date().getTime();
     }
   }
@@ -114,6 +114,16 @@ server.on('message', function (client) {
 
 });
 
+// Check for timeouts
+setInterval(function () {
+  for (var i = 0; i < clients.length; i++) {
+    if (clients[i].lastActivity + 5000 < new Date().getTime()) {
+      console.log('Timeout ' + clients[i].id);
+      deleteClient(clients[i].id);
+    }
+  }
+}, 3000);
+
 function createClient(clientID, name) {
   // Create new messages to the queue for all clients
   for (var i = 0; i < clients.length; i++) {
@@ -145,7 +155,7 @@ function deleteClient(clientID) {
   for (var i = 0; i < clients.length; i++) {
     if (clientID === clients[i].id) {
       for (var j = 0; j < clients.length; j++) {
-        if (clientID !== clients[i].id) {
+        if (clientID !== clients[j].id) {
           messages.push({
             ID: clients[j].id,    // To whom?
             msgType: NET.LOGOUT,  // The what?
