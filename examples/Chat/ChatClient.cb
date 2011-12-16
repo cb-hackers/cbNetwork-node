@@ -6,7 +6,7 @@ Include "ChatUtil.cb"
 SetWindow "CB-Chat (client)"
 
 // K‰ynnistet‰‰n client.
-nRet = InitClient("localhost", PORT, 1000)
+nRet = InitClient("lakka.kapsi.fi", 61821, 1000)
 If nRet <> 0 Then
     // Tuli joku virhe
     errMsg$ = "(" + nRet + ") " + GetNetErrorString(nRet)
@@ -15,13 +15,16 @@ EndIf
 
 SAFEEXIT OFF
 
-Global gLoggedIn, gClientDataSended
+Global gLoggedIn, gClientDataSended, gIdleTimer
 gLoggedIn           = False
 gClientDataSended   = False
 
 Global gInputMessage$, gSendMessage$
 
 gMode = MODE_CLIENT
+
+gIdleTimer = Timer()
+
 //================================================================================
 // P‰‰silmukka
 //================================================================================
@@ -110,7 +113,6 @@ Function ReadDataFromServer()
             
         ElseIf netmsg = NET_LOGIN_FAILED Then
             // Login ep‰onnistui
-            SetWindow "FAILED LOL"
             gLoggedIn = False
             
         ElseIf netmsg = NET_LOGIN Then
@@ -186,6 +188,9 @@ Function SendDataToServer()
         // Ollaan jo kirjauduttu palvelimelle
         // Jos mit‰‰n viesti‰ ei ole kirjoitettu niin l‰hetet‰‰n idle-viesti
         If gSendMessage = "" Then
+            // Let's not spam the server
+            If Timer() < (gIdleTimer + 500) Then Return False
+            gIdleTimer = Timer()
             _Net_PutByte(NET_IDLE)
         Else
             // Teksti‰ on kirjoitettu joten l‰hetet‰‰n se

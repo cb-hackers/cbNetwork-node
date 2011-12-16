@@ -5,7 +5,7 @@ Include "../cbNetwork.cb"
 SetWindow "CB-Chat (client)"
 
 // K‰ynnistet‰‰n client.
-nRet = InitClient("84.20.150.46", 21522, 1000)
+nRet = InitClient("hakku.viuhka.fi", 21522, 1000)
 If nRet <> 0 Then
     // Tuli joku virhe
     errMsg$ = "(" + nRet + ") " + GetNetErrorString(nRet)
