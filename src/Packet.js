@@ -17,7 +17,10 @@ function Packet (input) {
     this.memBlock = new Buffer(input + 4);
   } else if (input instanceof Buffer) {
     this.memBlock = input;
-  } else {
+  } else if (input instanceof Packet) {
+    this.memBlock = input.memBlock;
+  }
+  else {
     this.memBlock = new Buffer(4);
   }
   this.offset = 4;
@@ -62,8 +65,10 @@ Packet.prototype.getInt = function () {
  */
 Packet.prototype.getString = function () {
   var len = this.getInt(),
-    str = this.memBlock.toString('ascii', this.offset, this.offset + len);
-  this.offset += len;
+    str = '';
+  for( var i=0; i<len; i++ ) {
+    str += String.fromCharCode( this.memBlock[this.offset++] );
+  }
   return str;
 };
 

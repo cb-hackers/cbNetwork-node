@@ -1,28 +1,21 @@
 var cbNetwork = require('../src/cbNetwork');
-var Packet = cbNetwork.Packet;
-var argv = require('optimist')
-    .default({p : 1337, a : undefined})
-    .alias({'p' : 'port', 'a' : 'address', 'd' : 'debug'})
-    .argv;
+var udp = require('dgram');
 
-// Create a server on a port specified in command line or if not specified, use the default 1337
-var server = new cbNetwork.Server(argv.p, argv.a);
+// Hoist up a server
+var server = new cbNetwork.Server.createServer(1337);
 
 // Reply on message.
-server.on('message', function (client) {
-  client.reply(client.data);
-  console.log(client.data);
+server.on('message', function (data, client) {
+  server.send(data, client);
 });
 
-/*
 // Create a simple client to test the server
 var sock = new udp.createSocket('udp4');
-
 
 // Send a message to our EchoServer
 console.log('Sending Hello World!');
 var msg = new Buffer('Hello World!');
-sock.send(msg, 0, msg.length, argv.p, argv.a);
+sock.send(msg, 0, msg.length, 1337, '127.0.0.1');
 
 // Wait for server's reply
 sock.on('message', function (msg, peer) {
@@ -31,7 +24,6 @@ sock.on('message', function (msg, peer) {
   sock.close();
   server.sock.close();
 });
-*/
 
 /* Expected result:
 
