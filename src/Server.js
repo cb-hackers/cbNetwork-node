@@ -13,11 +13,18 @@ var dgram = require('dgram'),
  * Client class includes client information, message and a reply function for convenience
  *
  * @constructor
- * @property {String} address    Client's address
- * @property {Number} port       Client's port
- * @property {Number} id         Client's unique identifier
- * @property {Packet} data       Client's message to the server
- * @property {UDP Socket} sock   Reference to server's UDP socket (used for answering to the client)
+ *
+ * @param {String} address  Client's address
+ * @param {Number} port     Client's port
+ * @param {Number} id       Client's unique identifier
+ * @param {Packet} data     Client's message to the server
+ * @param {UDP} _sock       Reference to server's UDP socket (used for answering to the client)
+ *
+ * @property {String} address  Client's address
+ * @property {Number} port     Client's port
+ * @property {Number} id       Client's unique identifier
+ * @property {Packet} data     Client's message to the server
+ * @property {UDP} _sock       Reference to server's UDP socket (used for answering to the client)
  */
 function Client(address, port, id, data, sock) {
   this.address = address;
