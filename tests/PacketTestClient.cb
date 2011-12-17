@@ -1,0 +1,159 @@
+// Constants that define the type of data to send after this command-byte
+Const NET_BYTE = 1
+Const NET_SHORT = 2
+Const NET_USHORT = 3
+Const NET_INTEGER = 4
+Const NET_FLOAT = 5
+Const NET_STRING = 6
+Const NET_FAIL = 255
+
+SCREEN 500, 600
+
+Include "../cbNetwork.cb"
+
+SetWindow "Packet Test (client)"
+
+// Start the client.
+nRet = InitClient("hakku.viuhka.fi", 21522, 1000)
+If nRet <> 0 Then
+    // An error was occured.
+    errMsg$ = "(" + nRet + ") " + GetNetErrorString(nRet)
+    MakeError errMsg 
+EndIf
+
+// A newline in MakeError
+nl$ = Chr(10)+Chr(13)
+
+
+Print "---- Test sending byte"
+testByte% = 128
+_Net_InitMemBlock()
+_Net_PutByte( NET_BYTE )
+_Net_PutByte( testByte% )
+retValByte% = sendAndRead( NET_BYTE )
+Print "Sent: " + testByte%
+Print "Recv: " + retValByte%
+If retValByte% <> testByte% Then MakeError "Sending and receiving BYTE failed!"+nl+"Sent: "+testByte+nl+"Recv: "+retValByte
+
+Print ""
+Print "---- Test sending short"
+testShort% = -1337
+_Net_InitMemBlock()
+_Net_PutByte( NET_SHORT )
+_Net_PutShort( testShort% )
+retValShort% = sendAndRead( NET_SHORT )
+Print "Sent: " + testByte%
+Print "Recv: " + retValByte%
+If retValShort% <> testShort% Then MakeError "Sending and receiving SHORT failed!"+nl+"Sent: "+testShort+nl+"Recv: "+retValShort
+
+Print ""
+Print "---- Test sending unsigned short"
+testShort% = 56002
+_Net_InitMemBlock()
+_Net_PutByte( NET_USHORT )
+_Net_PutShort( testShort% )
+retValShort% = sendAndRead( NET_USHORT )
+Print "Sent: " + testShort%
+Print "Recv: " + retValShort%
+If retValShort% <> testShort% Then MakeError "Sending and receiving USHORT failed!"+nl+"Sent: "+testShort+nl+"Recv: "+retValShort
+
+Print ""
+Print "---- Test sending integer"
+testInt% = 2144444647
+_Net_InitMemBlock()
+_Net_PutByte( NET_INTEGER )
+_Net_PutInt( testInt )
+retValInt% = sendAndRead( NET_INTEGER )
+Print "Sent: " + testInt%
+Print "Recv: " + retValInt%
+If retValInt% <> testInt Then MakeError "Sending and receiving INTEGER failed!"+nl+"Sent: "+testInt+nl+"Recv: "+retValInt
+
+Print ""
+Print "---- Test sending negative integer"
+testInt% = -2142244447
+_Net_InitMemBlock()
+_Net_PutByte( NET_INTEGER )
+_Net_PutInt( testInt% )
+retValInt% = sendAndRead( NET_INTEGER )
+Print "Sent: " + testInt%
+Print "Recv: " + retValInt%
+If retValInt% <> testInt% Then MakeError "Sending and receiving NEGATIVE INTEGER failed!"+nl+"Sent: "+testInt+nl+"Recv: "+retValInt
+
+Print ""
+Print "---- Test sending float"
+testFloat# = 15.6256
+_Net_InitMemBlock()
+_Net_PutByte( NET_FLOAT )
+_Net_PutFloat( testFloat# )
+retValFloat# = sendAndRead( NET_FLOAT )
+Print "Sent: " + testFloat#
+Print "Recv: " + retValFloat#
+// Allow a little inconsistency in the value
+If retValFloat < testFloat#-0.001 Or retValFloat > testFloat#+0.001 Then MakeError "Sending and receiving FLOAT failed!"+nl+"Sent: "+testFloat+nl+"Recv: "+retValFloat
+
+Print ""
+Print "---- Test sending string"
+testStr$ = "cbNetwork-node"
+_Net_InitMemBlock()
+_Net_PutByte( NET_STRING )
+_Net_PutString( testStr$ )
+retValStr$ = sendAndRead( NET_STRING )
+Print "Sent: " + testStr$
+Print "Recv: " + retValStr$
+If retValStr$ <> testStr$ Then MakeError "Sending and receiving STRING failed!"+nl+"Sent: "+testStr+nl+"Recv: "+retValStr
+
+Print ""
+Print "---- Test sending string with special characters"
+testStr$ = Chr(1) + Chr(20) + Chr(255) + "äöåÅÄÖabcSD:;><@?über"
+_Net_InitMemBlock()
+_Net_PutByte( NET_STRING )
+_Net_PutString( testStr$ )
+retValString$ = sendAndRead( NET_STRING )
+Print "Sent: " + testStr$
+Print "Recv: " + retValString$
+If retValString$ <> testStr$ Then MakeError "Sending and receiving SPECIAL CHAR'D STRING failed!"+nl+"Sent: "+testStr+nl+"Recv: "+retValStr
+
+Print ""
+Print ""
+Print ""
+Print "#############################"
+Print "#   All tests succeeded!    #"
+Print "#############################"
+
+WaitKey
+End
+
+
+Function sendAndRead( dataType )
+
+    ClientSend()
+    
+    nRet = ClientRead()
+    
+    // Lukemisessa tuli joku virhe
+    If nRet <> 0 Then 
+        // Jos virhe oli "Connection timed out" niin ei välitetä siitä
+        If nRet <> 10060 Then
+            errMsg$ = "(" + nRet + ") " + GetNetErrorString(nRet)
+            MakeError errMsg
+        EndIf
+    EndIf
+    
+    // Muistipalan alussa on aina saapuneen datan pituus joka luetaan tässä pois
+    _Net_GetInt()
+    
+    If dataType = NET_BYTE Then
+        Return _Net_GetByte()
+    ElseIf dataType = NET_SHORT Then
+        Return _Net_GetShort()
+    ElseIf dataType = NET_USHORT Then
+        Return _Net_GetUShort()
+    ElseIf dataType = NET_INTEGER Then
+        Return _Net_GetInt()
+    ElseIf dataType = NET_FLOAT Then
+        Return _Net_GetFloat()
+    ElseIf dataType = NET_STRING Then
+        Return _Net_GetString()
+    EndIf
+    
+EndFunction

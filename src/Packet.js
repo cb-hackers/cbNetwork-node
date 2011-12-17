@@ -47,21 +47,57 @@ Packet.prototype.resize = function (size) {
 
 /**
  * Returns an unsigned byte from the memblock and moves the offset accordingly
+ *
+ * @returns {Number}  an unsigned byte, 0...255
  */
 Packet.prototype.getByte = function () {
   return this.memBlock[this.offset++];
 };
 
 /**
- * Returns an unsigned int from the memblock and moves the offset accordingly
+ * Returns a signed short from the memblock and moves the offset accordingly.
+ *
+ * @returns {Number}  a 16-bit signed integer, -32768...32768
+ */
+Packet.prototype.getShort = function () {
+  this.offset += 2;
+  return this.memBlock.readInt16LE(this.offset - 2);
+};
+
+/**
+ * Returns an unsigned short from the memblock and moves the offset accordingly.
+ Ä
+ * @returns {Number}  a 16-bit unsigned integer, 0...65535
+ */
+Packet.prototype.getUShort = function () {
+  this.offset += 2;
+  return this.memBlock.readUInt16LE(this.offset - 2);
+};
+
+/**
+ * Returns an integer from the memblock and moves the offset accordingly
+ * 
+ * @returns {Number}  a 32-bit integer, -2147483647...2147483647
  */
 Packet.prototype.getInt = function () {
   this.offset += 4;
-  return this.memBlock.readUInt32LE(this.offset - 4);
+  return this.memBlock.readInt32LE(this.offset - 4);
+};
+
+/**
+ * Returns a float from the memblock and moves the offset accordingly
+ * 
+ * @returns {Number}  a 32-bit float, 3.4e38...3.4e-38 (7 numbers)
+ */
+Packet.prototype.getFloat = function () {
+  this.offset += 4;
+  return this.memBlock.readFloatLE(this.offset - 4);
 };
 
 /**
  * Returns a string from the memblock and moves the offset accordingly
+ *
+ * @returns {String}
  */
 Packet.prototype.getString = function () {
   var len = this.getInt(),
@@ -74,6 +110,8 @@ Packet.prototype.getString = function () {
 
 /**
  * Gets the client id, which is the first integer in memblock.
+ *
+ * @returns {Number}
  */
 Packet.prototype.__defineGetter__('clientId', function (value) {
   return this.memBlock.readInt32LE(0);
@@ -95,6 +133,28 @@ Packet.prototype.putByte = function (value) {
 };
 
 /**
+ * Puts a signed short to the memblock and moves the offset accordingly.
+ *
+ * @param {Number} value  a 16-bit signed integer, -32768...32768
+ */
+Packet.prototype.putShort = function (value) {
+  this.resize(2); // Resize memBlock if needed
+  return this.memBlock.writeInt16LE(value, this.offset);
+  this.offset += 2;
+};
+
+/**
+ * Puts an unsigned short to the memblock and moves the offset accordingly.
+ *
+ * @param {Number} value  a 16-bit unsigned integer, 0...65535
+ */
+Packet.prototype.putUShort = function (value) {
+  this.resize(2); // Resize memBlock if needed
+  return this.memBlock.writeUInt16LE(value, this.offset);
+  this.offset += 2;
+};
+
+/**
  * Puts an int to the memblock and moves the offset accordingly
  *
  * @param {Number} value  a 32-bit integer to write to memblock
@@ -102,6 +162,17 @@ Packet.prototype.putByte = function (value) {
 Packet.prototype.putInt = function (value) {
   this.resize(4); // Resize memBlock if needed
   this.memBlock.writeInt32LE(value, this.offset);
+  this.offset += 4;
+};
+
+/**
+ * Puts a float from the memblock and moves the offset accordingly
+ * 
+ * @param {Number} value  a 32-bit float, 3.4e38...3.4e-38 (7 numbers)
+ */
+Packet.prototype.putFloat = function (value) {
+  this.resize(4); // Resize memBlock if needed
+  this.memBlock.writeFloatLE(value, this.offset);
   this.offset += 4;
 };
 
@@ -121,6 +192,8 @@ Packet.prototype.putString = function (value) {
 
 /**
  * Puts the client id as the first integer in the memblock.
+ *
+ * @param {Number} value  client ID, a 32-bit integer
  */
 Packet.prototype.__defineSetter__('clientId', function (value) {
   this.memBlock.writeInt32LE(value, 0);
