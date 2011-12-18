@@ -1,8 +1,5 @@
 /**
- * HTTP abstraction that works like cbNetwork equivalent
- *
- * @requires http, url
- * @author Ville "tuhoojabotti" Lahdenvuo
+ * @fileOverview This file has the implementation of {@link HTTP} module.
  */
 
 /** @ignore */
@@ -10,12 +7,19 @@ var http = require('http'),
   urlParser = require('url');
 
 /**
- * Creates a HTTP GET request and calls the callback with the results
+ * @namespace Holds static functions for HTTP abstraction that work like cbNetwork equivalents.
+ */
+var HTTP = {};
+
+/**
+ * Creates a HTTP GET request and calls the callback with the results.
+ *
+ * @requires http, url
  *
  * @param {String} url   Address to GET
  * @param {Function} cb  function (statusCode, data) { } statusCode will be 0 on failure
  */
-exports.get = function (url, cb) {
+HTTP.get = function (url, cb) {
   var urlObj = urlParser.parse(url);
   http.get({
     host: urlObj.hostname,
@@ -38,3 +42,5 @@ exports.get = function (url, cb) {
     cb(0, e.message);
   });
 };
+
+exports.HTTP = HTTP;

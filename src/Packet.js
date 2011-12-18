@@ -1,5 +1,5 @@
 /**
-* Packet is used to emulate CoolBasic MemBlock-system that is used in cbNetwork for packet data.
+* @fileOverview This file has the implementation of {@link Packet} class.
 */
 
 exports.Packet = Packet;
@@ -8,7 +8,8 @@ exports.Packet = Packet;
  * Creates a new Buffer. Always define size when creating a new Packet if possible.
  * Writing to a buffer with undefined size causes resize function to create and copy
  * information to a new, bigger, buffer which is slow.
- * @class
+ *
+ * @class Packet is used to emulate CoolBasic MemBlock-system that is used in cbNetwork for packet data.
  *
  * @param {Number|Buffer} [input]  the size in bytes to be allocated. The actual size of allocation
  *                                 will actually be the given size + 4 bytes because of internal use.
@@ -47,7 +48,7 @@ Packet.prototype.resize = function (size) {
 ///////////////////////////
 
 /**
- * Returns an unsigned byte from the memblock and moves the offset accordingly
+ * Returns an unsigned byte from the memblock and moves the offset accordingly.
  *
  * @returns {Number}  an unsigned byte, 0...255
  */
@@ -76,7 +77,7 @@ Packet.prototype.getUShort = function () {
 };
 
 /**
- * Returns an integer from the memblock and moves the offset accordingly
+ * Returns an integer from the memblock and moves the offset accordingly.
  *
  * @returns {Number}  a 32-bit integer, -2147483647...2147483647
  */
@@ -86,7 +87,7 @@ Packet.prototype.getInt = function () {
 };
 
 /**
- * Returns a float from the memblock and moves the offset accordingly
+ * Returns a float from the memblock and moves the offset accordingly.
  *
  * @returns {Number}  a 32-bit float, 3.4e38...3.4e-38 (7 numbers)
  */
@@ -96,7 +97,7 @@ Packet.prototype.getFloat = function () {
 };
 
 /**
- * Returns a string from the memblock and moves the offset accordingly
+ * Returns a string from the memblock and moves the offset accordingly.
  *
  * @returns {String}
  */
@@ -122,7 +123,7 @@ Packet.prototype.__defineGetter__('clientId', function (value) {
 /////////////////////////
 
 /**
- * Puts a byte to the memblock and moves the offset accordingly
+ * Puts a byte to the memblock and moves the offset accordingly.
  *
  * @param {Number} value  Byte to write, must be in range 0...255
  * @throws {TypeError}    If value not a Number or not in range
@@ -166,7 +167,7 @@ Packet.prototype.putUShort = function (value) {
 };
 
 /**
- * Puts an integer to the memblock and moves the offset accordingly
+ * Puts an integer to the memblock and moves the offset accordingly.
  *
  * @param {Number} value  a 32-bit integer, -2147483648...2147483648
  * @throws {TypeError}    If value not a Number or out of range
@@ -181,7 +182,7 @@ Packet.prototype.putInt = function (value) {
 };
 
 /**
- * Puts a float to the memblock and moves the offset accordingly
+ * Puts a float to the memblock and moves the offset accordingly.
  *
  * @param {Number} value  a 32-bit float, 3.4e38...3.4e-38 (7 numbers)
  * @throws {TypeError}    If value NaN or not a Number
@@ -196,7 +197,7 @@ Packet.prototype.putFloat = function (value) {
 };
 
 /**
- * Puts a string to the memblock and moves the offset accordingly
+ * Puts a string to the memblock and moves the offset accordingly.
  *
  * @param {String} value  the string to be put to the memblock
  */

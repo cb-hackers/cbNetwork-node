@@ -1,7 +1,5 @@
 /**
- * Server is an UDP server using Node's UDP API that works like the cbNetwork server.
- *
- * @requires dgram, Packet
+ * @fileOverview This file has the implementation of {@link Server} and {@link Client} classes.
  */
 
 /** @ignore */
@@ -10,9 +8,10 @@ var dgram = require('dgram'),
   Packet = require('./Packet').Packet;
 
 /**
+ * A constructor for a new client.
  * @private
- * Client class includes client information, message and a reply function for convenience
- * @class
+ *
+ * @class Includes client information, message and a reply function for convenience.
  *
  * @param {String} address  Client's address
  * @param {Number} port     Client's port
@@ -48,9 +47,10 @@ Client.prototype.reply = function (data) {
 };
 
 /**
- * Server is the heart of cbNetwork-node. It creates an UDP socket and listens to it.
- * Automatically handling all client connections and calling 'message' event on new messages
- * @class
+ * Creates a new server.
+ *
+ * @class Server is an UDP server using Node's UDP API that works like the cbNetwork server.
+ * @requires dgram, {@link Packet}
  *
  * @param {Number} port        Port to bind to.
  * @param {String} [address]   Address to attach to.
@@ -99,18 +99,21 @@ Server.prototype.close = function () {
 };
 
 /**
- * Server calls this event on new messages. You can hook to it like this:
- *
- * @example
- * // Create a new server at port 1337 (Don't write code like this.)
- * var server = new (require('./cbNetwork').Server)(1337);
- * server.on('message', function (client) {
- *   client.reply(client.data);  // Simple echo server example
- * }
- *
  * @name Server#message
  * @event
  * @param {Client} client  Client instance with all the information you need.
+ *
+ * @description Server calls this event on new messages. You can hook to it like this:
+ * @example
+ * // Include cbNetwork - this is to be changed to require('cbNetwork');
+ * var cbNetwork = require('../src/cbNetwork');
+ *
+ * // Create a new server at port 1337
+ * var server = cbNetwork.Server(1337);
+ *
+ * server.on('message', function (client) {
+ *   client.reply(client.data);  // Simple echo server example
+ * }
  */
 
 exports.Server = Server;
