@@ -36,7 +36,11 @@
 		<nav>
 			<ul class="classList" id="ClassList">
 				
+					<li><a href="../symbols/cbNetwork.html">cbNetwork</a></li>
+				
 					<li><a href="../symbols/Client.html">Client</a></li>
+				
+					<li><a href="../symbols/HTTP.html">HTTP</a></li>
 				
 					<li><a href="../symbols/Packet.html">Packet</a></li>
 				
@@ -51,7 +55,7 @@
 			Documentation generator: <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0<br />
 			Template: <a href="http://www.thebrightlines.com/2010/05/06/new-template-for-jsdoctoolkit-codeview/" target="_blank">Codeview</a> 1.2<br />
 			Generated on:
-			<time datetime='2011-11-17' pubdate>2011-11-17 2:47</time>
+			<time datetime='2011-11-18' pubdate>2011-11-18 23:27</time>
 		</footer>
 	</div>
 </div>
@@ -69,7 +73,7 @@
 				
 				<div class="intro">
 					<p class="description summary">
-						
+						Packet is used to emulate CoolBasic MemBlock-system that is used in cbNetwork for packet data.
 					</p>
 						
 					
@@ -143,7 +147,7 @@
 												<td class="nameDescription">
 													<div class="fixedFont"><b><a href="../symbols/Packet.html#getByte">getByte</a></b>()
 													</div>
-													<div class="description">Returns an unsigned byte from the memblock and moves the offset accordingly</div>
+													<div class="description">Returns an unsigned byte from the memblock and moves the offset accordingly.</div>
 												</td>
 											</tr>
 										
@@ -154,7 +158,7 @@
 												<td class="nameDescription">
 													<div class="fixedFont"><b><a href="../symbols/Packet.html#getFloat">getFloat</a></b>()
 													</div>
-													<div class="description">Returns a float from the memblock and moves the offset accordingly</div>
+													<div class="description">Returns a float from the memblock and moves the offset accordingly.</div>
 												</td>
 											</tr>
 										
@@ -165,7 +169,7 @@
 												<td class="nameDescription">
 													<div class="fixedFont"><b><a href="../symbols/Packet.html#getInt">getInt</a></b>()
 													</div>
-													<div class="description">Returns an integer from the memblock and moves the offset accordingly</div>
+													<div class="description">Returns an integer from the memblock and moves the offset accordingly.</div>
 												</td>
 											</tr>
 										
@@ -187,7 +191,7 @@
 												<td class="nameDescription">
 													<div class="fixedFont"><b><a href="../symbols/Packet.html#getString">getString</a></b>()
 													</div>
-													<div class="description">Returns a string from the memblock and moves the offset accordingly</div>
+													<div class="description">Returns a string from the memblock and moves the offset accordingly.</div>
 												</td>
 											</tr>
 										
@@ -209,7 +213,7 @@
 												<td class="nameDescription">
 													<div class="fixedFont"><b><a href="../symbols/Packet.html#putByte">putByte</a></b>(value)
 													</div>
-													<div class="description">Puts a byte to the memblock and moves the offset accordingly</div>
+													<div class="description">Puts a byte to the memblock and moves the offset accordingly.</div>
 												</td>
 											</tr>
 										
@@ -220,7 +224,7 @@
 												<td class="nameDescription">
 													<div class="fixedFont"><b><a href="../symbols/Packet.html#putFloat">putFloat</a></b>(value)
 													</div>
-													<div class="description">Puts a float from the memblock and moves the offset accordingly</div>
+													<div class="description">Puts a float to the memblock and moves the offset accordingly.</div>
 												</td>
 											</tr>
 										
@@ -231,7 +235,7 @@
 												<td class="nameDescription">
 													<div class="fixedFont"><b><a href="../symbols/Packet.html#putInt">putInt</a></b>(value)
 													</div>
-													<div class="description">Puts an int to the memblock and moves the offset accordingly</div>
+													<div class="description">Puts an integer to the memblock and moves the offset accordingly.</div>
 												</td>
 											</tr>
 										
@@ -253,7 +257,7 @@
 												<td class="nameDescription">
 													<div class="fixedFont"><b><a href="../symbols/Packet.html#putString">putString</a></b>(value)
 													</div>
-													<div class="description">Puts a string to the memblock and moves the offset accordingly</div>
+													<div class="description">Puts a string to the memblock and moves the offset accordingly.</div>
 												</td>
 											</tr>
 										
@@ -309,7 +313,9 @@
 							</div>
 							
 							<div class="description">
-								Creates a new Buffer.
+								Creates a new Buffer. Always define size when creating a new Packet if possible.
+Writing to a buffer with undefined size causes resize function to create and copy
+information to a new, bigger, buffer which is slow.
 								
 							</div>
 							
@@ -321,10 +327,10 @@
 									
 										<dt>
 											<span class="light fixedFont">{Number|Buffer}</span>  <b>input</b>
-											
+											<i>Optional</i>
 										</dt>
 										<dd>the size in bytes to be allocated. The actual size of allocation
-                              will actually be the given size + 4 bytes because of internal use.</dd>
+                                will actually be the given size + 4 bytes because of internal use.</dd>
 									
 								</dl>
 							
@@ -366,7 +372,7 @@
 										</div>
 										
 										<div class="description">
-											Returns an unsigned byte from the memblock and moves the offset accordingly
+											Returns an unsigned byte from the memblock and moves the offset accordingly.
 											
 											
 											
@@ -416,7 +422,7 @@
 										</div>
 										
 										<div class="description">
-											Returns a float from the memblock and moves the offset accordingly
+											Returns a float from the memblock and moves the offset accordingly.
 											
 											
 											
@@ -466,7 +472,7 @@
 										</div>
 										
 										<div class="description">
-											Returns an integer from the memblock and moves the offset accordingly
+											Returns an integer from the memblock and moves the offset accordingly.
 											
 											
 											
@@ -566,7 +572,7 @@
 										</div>
 										
 										<div class="description">
-											Returns a string from the memblock and moves the offset accordingly
+											Returns a string from the memblock and moves the offset accordingly.
 											
 											
 											
@@ -617,7 +623,6 @@
 										
 										<div class="description">
 											Returns an unsigned short from the memblock and moves the offset accordingly.
- Ä
 											
 											
 											
@@ -667,7 +672,7 @@
 										</div>
 										
 										<div class="description">
-											Puts a byte to the memblock and moves the offset accordingly
+											Puts a byte to the memblock and moves the offset accordingly.
 											
 											
 											
@@ -684,11 +689,35 @@
 														<span class="light fixedFont">{Number}</span> <b>value</b>
 														
 													</dt>
-													<dd>byte to write, must be in range 0...255</dd>
+													<dd>Byte to write, must be in range 0...255</dd>
 												
 											</dl>
 										
 										
+										
+											<dl class="detailList nomargin">
+											
+												
+												
+												
+												
+												
+													<dt class="heading">Throws:</dt>
+													
+														<dt>
+															<span class="light fixedFont">{TypeError}</span>  <b></b>
+														</dt>
+														<dd>If value not a Number or not in range</dd>
+													
+												
+												
+												
+												
+												
+												
+												
+											
+											</dl>
 										
 										<div class="hr"></div>
 									</li>
@@ -707,7 +736,7 @@
 										</div>
 										
 										<div class="description">
-											Puts a float from the memblock and moves the offset accordingly
+											Puts a float to the memblock and moves the offset accordingly.
 											
 											
 											
@@ -730,6 +759,30 @@
 										
 										
 										
+											<dl class="detailList nomargin">
+											
+												
+												
+												
+												
+												
+													<dt class="heading">Throws:</dt>
+													
+														<dt>
+															<span class="light fixedFont">{TypeError}</span>  <b></b>
+														</dt>
+														<dd>If value NaN or not a Number</dd>
+													
+												
+												
+												
+												
+												
+												
+												
+											
+											</dl>
+										
 										<div class="hr"></div>
 									</li>
 								
@@ -747,7 +800,7 @@
 										</div>
 										
 										<div class="description">
-											Puts an int to the memblock and moves the offset accordingly
+											Puts an integer to the memblock and moves the offset accordingly.
 											
 											
 											
@@ -764,11 +817,35 @@
 														<span class="light fixedFont">{Number}</span> <b>value</b>
 														
 													</dt>
-													<dd>a 32-bit integer to write to memblock</dd>
+													<dd>a 32-bit integer, -2147483648...2147483648</dd>
 												
 											</dl>
 										
 										
+										
+											<dl class="detailList nomargin">
+											
+												
+												
+												
+												
+												
+													<dt class="heading">Throws:</dt>
+													
+														<dt>
+															<span class="light fixedFont">{TypeError}</span>  <b></b>
+														</dt>
+														<dd>If value not a Number or out of range</dd>
+													
+												
+												
+												
+												
+												
+												
+												
+											
+											</dl>
 										
 										<div class="hr"></div>
 									</li>
@@ -810,6 +887,30 @@
 										
 										
 										
+											<dl class="detailList nomargin">
+											
+												
+												
+												
+												
+												
+													<dt class="heading">Throws:</dt>
+													
+														<dt>
+															<span class="light fixedFont">{TypeError}</span>  <b></b>
+														</dt>
+														<dd>If value not a Number or not in range</dd>
+													
+												
+												
+												
+												
+												
+												
+												
+											
+											</dl>
+										
 										<div class="hr"></div>
 									</li>
 								
@@ -827,7 +928,7 @@
 										</div>
 										
 										<div class="description">
-											Puts a string to the memblock and moves the offset accordingly
+											Puts a string to the memblock and moves the offset accordingly.
 											
 											
 											
@@ -889,6 +990,30 @@
 											</dl>
 										
 										
+										
+											<dl class="detailList nomargin">
+											
+												
+												
+												
+												
+												
+													<dt class="heading">Throws:</dt>
+													
+														<dt>
+															<span class="light fixedFont">{TypeError}</span>  <b></b>
+														</dt>
+														<dd>If value not a Number or not in range</dd>
+													
+												
+												
+												
+												
+												
+												
+												
+											
+											</dl>
 										
 										<div class="hr"></div>
 									</li>
