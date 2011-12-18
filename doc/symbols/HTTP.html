@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
-		<title>Server | JsDoc Reference</title>
+		<title>HTTP | JsDoc Reference</title>
 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 		<meta name="mobileoptimized" content="0" />
@@ -68,12 +68,12 @@
 			<header>
 				<h1 class="classTitle">
 					
-					Class <span>Server</span>
+					Namespace <span>HTTP</span>
 				</h1>
 				
 				<div class="intro">
 					<p class="description summary">
-						Server is an UDP server using Node's UDP API that works like the cbNetwork server.
+						Holds static functions for HTTP abstraction that work like cbNetwork equivalents.
 					</p>
 						
 					
@@ -81,7 +81,7 @@
 							
 							
 							
-								<li>Defined in: <a href="../symbols/src/src_Server.js.html">Server.js</a></li>
+								<li>Defined in: <a href="../symbols/src/src_HTTP.js.html">HTTP.js</a></li>
 							
 							
 						</ul>
@@ -92,8 +92,8 @@
 			
 				<section>
 					<div class="props">
-						<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class Server.">
-							<caption class="sectionTitle">Class Summary</caption>
+						<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class HTTP.">
+							<caption class="sectionTitle">Namespace Summary</caption>
 							<thead>
 								<tr>
 									<th scope="col">Constructor Attributes</th>
@@ -105,9 +105,9 @@
 									<td class="attributes">&nbsp;</td>
 									<td class="nameDescription" >
 										<div class="fixedFont">
-											<b><a href="../symbols/Server.html#constructor">Server</a></b>(port, address)
+											<b><a href="../symbols/HTTP.html#constructor">HTTP</a></b>
 										</div>
-										<div class="description">Creates a new server.</div>
+										<div class="description"></div>
 									</td>
 								</tr>
 							</tbody>
@@ -129,7 +129,7 @@
 						
 						
 							<nav>
-								<table class="summaryTable" id="MethodsList" cellspacing="0" summary="A summary of the methods documented in the class Server.">
+								<table class="summaryTable" id="MethodsList" cellspacing="0" summary="A summary of the methods documented in the class HTTP.">
 									<thead>
 										<tr>
 											<th scope="col">Method Attributes</th>
@@ -143,11 +143,11 @@
 											<tr
 												 class='item0'
 											>
-												<td class="attributes">&nbsp;</td>
+												<td class="attributes">&lt;static&gt; &nbsp;</td>
 												<td class="nameDescription">
-													<div class="fixedFont"><b><a href="../symbols/Server.html#close">close</a></b>()
+													<div class="fixedFont">HTTP.<b><a href="../symbols/HTTP.html#.get">get</a></b>(url, cb)
 													</div>
-													<div class="description">Closes the socket abandoning all clients.</div>
+													<div class="description">Creates a HTTP GET request and calls the callback with the results.</div>
 												</td>
 											</tr>
 										
@@ -165,41 +165,6 @@
 	#### EVENTS SUMMARY
 	-->
 			
-				
-				<section>
-					
-						<nav>
-							<div class="props">
-								<table class="summaryTable" cellspacing="0" summary="A summary of the events documented in the class Server.">
-									<caption class="sectionTitle">Event Summary</caption>
-									
-									<thead>
-										<tr>
-											<th scope="col">Event Attributes</th>
-											<th scope="col">Event Name and Description</th>
-										</tr>
-									</thead>
-									
-									<tbody>
-										
-											<tr>
-												<td class="attributes">&nbsp;</td>
-												<td class="nameDescription">
-													<div class="fixedFont"><b><a href="../symbols/Server.html#event:message">message</a></b>(client)
-													</div>
-													<div class="description">Server calls this event on new messages.</div>
-												</td>
-											</tr>
-										
-									</tbody>
-								</table>
-							</div>
-						</nav>
-					
-					
-					
-				</section>
-			
 	<!--
 	#### CONSTRUCTOR DETAILS
 	-->
@@ -208,58 +173,22 @@
 					<div class="details props">
 						<div class="innerProps">
 							<h2 class="sectionTitle" id="constructor">
-								Class Detail
+								Namespace Detail
 							</h2>
 							
 							<div class="fixedFont">
-								<b>Server</b>(port, address)
+								<b>HTTP</b>
 							</div>
 							
 							<div class="description">
-								Creates a new server.
+								
 								
 							</div>
 							
 							
 						
 							
-								<dl class="detailList params">
-									<dt class="heading">Parameters:</dt>
-									
-										<dt>
-											<span class="light fixedFont">{Number}</span>  <b>port</b>
-											
-										</dt>
-										<dd>Port to bind to.</dd>
-									
-										<dt>
-											<span class="light fixedFont">{String}</span>  <b>address</b>
-											<i>Optional</i>
-										</dt>
-										<dd>Address to attach to.</dd>
-									
-								</dl>
 							
-							
-							
-								<dl class="detailList nomargin">
-									
-									
-									
-									
-									
-									
-									
-									
-									
-										<dt class="heading">Requires:</dt>
-										
-											<dd>dgram, <a href="../symbols/Packet.html">Packet</a></dd>
-										
-									
-									
-									
-								</dl>
 							
 						</div>
 					</div>
@@ -286,18 +215,18 @@
 									<li 
 										 class='item0'
 									>
-										<div class="fixedFont heading" id="close">
+										<div class="fixedFont heading" id=".get">
 											<span class='lighter'>
-											
+											&lt;static&gt; 
 											</span>
 											
 											
 											
-											<b>close</b>()
+											<span class="light">HTTP.</span><b>get</b>(url, cb)
 										</div>
 										
 										<div class="description">
-											Closes the socket abandoning all clients.
+											Creates a HTTP GET request and calls the callback with the results.
 											
 											
 											
@@ -307,7 +236,45 @@
 										
 										
 										
+											<dl class="detailList params">
+												<dt class="heading">Parameters:</dt>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>url</b>
+														
+													</dt>
+													<dd>Address to GET</dd>
+												
+													<dt>
+														<span class="light fixedFont">{Function}</span> <b>cb</b>
+														
+													</dt>
+													<dd>function (statusCode, data) { } statusCode will be 0 on failure</dd>
+												
+											</dl>
 										
+										
+										
+											<dl class="detailList nomargin">
+											
+												
+												
+												
+												
+												
+												
+												
+												
+												
+													<dt class="heading">Requires:</dt>
+													
+														<dd>http, url</dd>
+													
+												
+												
+												
+											
+											</dl>
 										
 										
 									</li>
@@ -321,67 +288,6 @@
 	<!--
 	#### EVENT DETAILS
 	-->		
-			
-				<section>
-					<div class="details props">
-						<div class="innerProps">
-							<h2 class="sectionTitle">
-								Event Detail
-							</h2>
-							
-							
-								<div class="fixedFont heading" id="event:message">
-									<span class='lighter'>
-									
-									</span>
-									
-									
-									
-									<b>message</b>(client)
-								</div>
-								
-								<div class="description">
-									Server calls this event on new messages. You can hook to it like this:
-									
-									
-									
-									
-								</div>
-								
-								
-									
-										<pre class="code">// Include cbNetwork - this is to be changed to require('cbNetwork');
-var cbNetwork = require('../src/cbNetwork');
-
-// Create a new server at port 1337
-var server = cbNetwork.Server(1337);
-
-server.on('message', function (client) {
-  client.reply(client.data);  // Simple echo server example
-}</pre>
-									
-								
-								
-								
-									<dl class="detailList params">
-										<dt class="heading">Parameters:</dt>
-										
-											<dt>
-												<span class="light fixedFont">{<a href="../symbols/Client.html">Client</a>}</span> <b>client</b>
-												
-											</dt>
-											<dd>Client instance with all the information you need.</dd>
-										
-									</dl>
-								
-								
-								
-								
-								
-							
-						</div>
-					</div>
-				</section>
 			
 		</article>
 	</div>
