@@ -10,9 +10,9 @@ var dgram = require('dgram'),
   Packet = require('./Packet').Packet;
 
 /**
+ * @private
  * Client class includes client information, message and a reply function for convenience
- *
- * @constructor
+ * @class
  *
  * @param {String} address  Client's address
  * @param {Number} port     Client's port
@@ -50,10 +50,10 @@ Client.prototype.reply = function (data) {
 /**
  * Server is the heart of cbNetwork-node. It creates an UDP socket and listens to it.
  * Automatically handling all client connections and calling 'message' event on new messages
+ * @class
  *
- * @constructor
- * @param {Number} port             Port to bind to.
- * @param {String} [address]        Address to attach to.
+ * @param {Number} port        Port to bind to.
+ * @param {String} [address]   Address to attach to.
  */
 function Server(port, address) {
   var self = this;
@@ -76,20 +76,19 @@ function Server(port, address) {
     self.emit('message', client);
   });
 
-  // Handle errors! Neat!
+  // Handle errors. Neat!
   this._sock.on('error', function (e) {
     console.log('UDP ERROR');
     console.log(e);
-    self._sock.close();
+    self.close(); // Abandon ship!
   });
-  // Handle errors! Neat!
   this._sock.on('close', function () {
-    console.log('UDP CLOSED');
+    console.log('Server closed gracefully.');
   });
 
   // Bind the server
   this._sock.bind(port, address);
-  console.log("Server listening on " + address + ":" + port);
+  console.log("Server listening on " + (address ? address : '0.0.0.0') + ":" + port);
 }
 
 Server.prototype.__proto__ = EventEmitter.prototype;
@@ -103,9 +102,10 @@ Server.prototype.close = function () {
  * Server calls this event on new messages. You can hook to it like this:
  *
  * @example
- * Server.on('message', function (client) {
- *   // simple echo server example
- *   client.reply(client.data);
+ * // Create a new server at port 1337 (Don't write code like this.)
+ * var server = new (require('./cbNetwork').Server)(1337);
+ * server.on('message', function (client) {
+ *   client.reply(client.data);  // Simple echo server example
  * }
  *
  * @name Server#message
@@ -113,4 +113,4 @@ Server.prototype.close = function () {
  * @param {Client} client  Client instance with all the information you need.
  */
 
-exports.initServer = Server;
+exports.Server = Server;

@@ -5,26 +5,27 @@
 exports.Packet = Packet;
 
 /**
-* Creates a new Buffer.
-*
-* @param {Number|Buffer} input  the size in bytes to be allocated. The actual size of allocation
-*                               will actually be the given size + 4 bytes because of internal use.
-* @constructor
-*/
+ * Creates a new Buffer. Always define size when creating a new Packet if possible.
+ * Writing to a buffer with undefined size causes resize function to create and copy
+ * information to a new, bigger, buffer which is slow.
+ * @class
+ *
+ * @param {Number|Buffer} [input]  the size in bytes to be allocated. The actual size of allocation
+ *                                 will actually be the given size + 4 bytes because of internal use.
+ *
+ */
 function Packet (input) {
-  // If it's a number
   if ('number' === typeof input) {
     this.memBlock = new Buffer(input + 4);
   } else if (input instanceof Buffer) {
     this.memBlock = input;
   } else if (input instanceof Packet) {
     this.memBlock = input.memBlock;
-  }
-  else {
+  } else {
     this.memBlock = new Buffer(4);
   }
+  // First integer is the ID, skip it.
   this.offset = 4;
-  this.sender = undefined;
 };
 
 /**
@@ -41,9 +42,9 @@ Packet.prototype.resize = function (size) {
   }
 };
 
-////////////////////////////
+///////////////////////////
 /////////////////// GETTERS
-////////////////////////////
+///////////////////////////
 
 /**
  * Returns an unsigned byte from the memblock and moves the offset accordingly
@@ -66,7 +67,7 @@ Packet.prototype.getShort = function () {
 
 /**
  * Returns an unsigned short from the memblock and moves the offset accordingly.
- Ä
+ *
  * @returns {Number}  a 16-bit unsigned integer, 0...65535
  */
 Packet.prototype.getUShort = function () {
@@ -76,7 +77,7 @@ Packet.prototype.getUShort = function () {
 
 /**
  * Returns an integer from the memblock and moves the offset accordingly
- * 
+ *
  * @returns {Number}  a 32-bit integer, -2147483647...2147483647
  */
 Packet.prototype.getInt = function () {
@@ -86,7 +87,7 @@ Packet.prototype.getInt = function () {
 
 /**
  * Returns a float from the memblock and moves the offset accordingly
- * 
+ *
  * @returns {Number}  a 32-bit float, 3.4e38...3.4e-38 (7 numbers)
  */
 Packet.prototype.getFloat = function () {
@@ -100,10 +101,9 @@ Packet.prototype.getFloat = function () {
  * @returns {String}
  */
 Packet.prototype.getString = function () {
-  var len = this.getInt(),
-    str = '';
-  for( var i=0; i<len; i++ ) {
-    str += String.fromCharCode( this.memBlock[this.offset++] );
+  var len = this.getInt(), str = '';
+  for (var i = 0; i < len; i++) {
+    str += String.fromCharCode(this.memBlock[this.offset++]);
   }
   return str;
 };
@@ -117,17 +117,20 @@ Packet.prototype.__defineGetter__('clientId', function (value) {
   return this.memBlock.readInt32LE(0);
 });
 
-////////////////////////////
-///////////////// PUTTERS :P
-////////////////////////////
-// TODO: Add checks for values e.g. byte is 0-255
+/////////////////////////
+///////////////// PUTTERS
+/////////////////////////
 
 /**
  * Puts a byte to the memblock and moves the offset accordingly
  *
- * @param {Number} value  byte to write, must be in range 0...255 
+ * @param {Number} value  Byte to write, must be in range 0...255
+ * @throws {TypeError}    If value not a Number or not in range
  */
 Packet.prototype.putByte = function (value) {
+  if ('number' !== typeof value || value < 0 || value > 255) {
+    throw TypeError('Byte to write must be Number and in range 0...255');
+  }
   this.resize(1); // Resize memBlock if needed
   this.memBlock[this.offset++] = value;
 };
@@ -136,8 +139,12 @@ Packet.prototype.putByte = function (value) {
  * Puts a signed short to the memblock and moves the offset accordingly.
  *
  * @param {Number} value  a 16-bit signed integer, -32768...32768
+ * @throws {TypeError}    If value not a Number or not in range
  */
 Packet.prototype.putShort = function (value) {
+  if ('number' !== typeof value || value < -32768 || value > 32768) {
+    throw TypeError('Short to write must be Number and in range -32768...32768');
+  }
   this.resize(2); // Resize memBlock if needed
   return this.memBlock.writeInt16LE(value, this.offset);
   this.offset += 2;
@@ -147,30 +154,42 @@ Packet.prototype.putShort = function (value) {
  * Puts an unsigned short to the memblock and moves the offset accordingly.
  *
  * @param {Number} value  a 16-bit unsigned integer, 0...65535
+ * @throws {TypeError}    If value not a Number or not in range
  */
 Packet.prototype.putUShort = function (value) {
+  if ('number' !== typeof value || value < 0 || value > 65535) {
+    throw TypeError('Unsigned Short to write must be Number and in range 0...65535');
+  }
   this.resize(2); // Resize memBlock if needed
   return this.memBlock.writeUInt16LE(value, this.offset);
   this.offset += 2;
 };
 
 /**
- * Puts an int to the memblock and moves the offset accordingly
+ * Puts an integer to the memblock and moves the offset accordingly
  *
- * @param {Number} value  a 32-bit integer to write to memblock
+ * @param {Number} value  a 32-bit integer, -2147483648...2147483648
+ * @throws {TypeError}    If value not a Number or out of range
  */
 Packet.prototype.putInt = function (value) {
+  if ('number' !== typeof value || value < -2147483648 || value > 2147483648) {
+    throw TypeError('Integer to write must be Number and in range -2147483648...2147483648');
+  }
   this.resize(4); // Resize memBlock if needed
   this.memBlock.writeInt32LE(value, this.offset);
   this.offset += 4;
 };
 
 /**
- * Puts a float from the memblock and moves the offset accordingly
- * 
+ * Puts a float to the memblock and moves the offset accordingly
+ *
  * @param {Number} value  a 32-bit float, 3.4e38...3.4e-38 (7 numbers)
+ * @throws {TypeError}    If value NaN or not a Number
  */
 Packet.prototype.putFloat = function (value) {
+  if ('number' !== typeof value || isNaN(value)) {
+    throw TypeError('Float to write must be Number and not NaN.');
+  }
   this.resize(4); // Resize memBlock if needed
   this.memBlock.writeFloatLE(value, this.offset);
   this.offset += 4;
@@ -194,7 +213,11 @@ Packet.prototype.putString = function (value) {
  * Puts the client id as the first integer in the memblock.
  *
  * @param {Number} value  client ID, a 32-bit integer
+ * @throws {TypeError}    If value NaN or not a Number
  */
 Packet.prototype.__defineSetter__('clientId', function (value) {
+  if ('number' !== typeof value || isNaN(value)) {
+    throw TypeError('ID to write must be Number and not NaN.');
+  }
   this.memBlock.writeInt32LE(value, 0);
 });
