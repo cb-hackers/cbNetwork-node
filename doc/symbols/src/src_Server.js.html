@@ -112,15 +112,15 @@
 <span class='line'>105</span>  *
 <span class='line'>106</span>  * @description Server calls this event on new messages. You can hook to it like this:
 <span class='line'>107</span>  * @example
-<span class='line'>108</span>  * // Include cbNetwork - this is to be changed to require('cbNetwork');
-<span class='line'>109</span>  * var cbNetwork = require('../src/cbNetwork');
+<span class='line'>108</span>  * // Load up cbNetwork
+<span class='line'>109</span>  * var cbNetwork = require('cbNetwork');
 <span class='line'>110</span>  *
 <span class='line'>111</span>  * // Create a new server at port 1337
-<span class='line'>112</span>  * var server = cbNetwork.Server(1337);
+<span class='line'>112</span>  * var server = new cbNetwork.Server(1337);
 <span class='line'>113</span>  *
 <span class='line'>114</span>  * server.on('message', function (client) {
 <span class='line'>115</span>  *   client.reply(client.data);  // Simple echo server example
-<span class='line'>116</span>  * }
+<span class='line'>116</span>  * });
 <span class='line'>117</span>  */</span><span class="WHIT">
 <span class='line'>118</span> 
 <span class='line'>119</span> </span><span class="NAME">exports.Server</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Server</span><span class="PUNC">;</span><span class="WHIT">
