@@ -1,4 +1,11 @@
-## Stuff that shouldn't go to npm package
+## Directories that shouldn't go to npm package
 doc/
 examples/
 tests/
+
+## And main level files that shouldn't go there either
+*
+
+## ...except for README.md and index.js
+!README.md
+!index.js
