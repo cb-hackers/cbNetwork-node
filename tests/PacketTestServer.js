@@ -1,4 +1,4 @@
-var cbNetwork = require('../src/cbNetwork');
+var cbNetwork = require('cbNetwork');
 var Packet = cbNetwork.Packet;
 var argv = require('optimist')
     .default({p : 1337, a : undefined})

@@ -1,4 +1,4 @@
-var cbNetwork = require('../src/cbNetwork');
+var cbNetwork = require('cbNetwork');
 
 cbNetwork.HTTP.get('http://tuhoojabotti.com/r', function (status, data) {
   console.log('Server responded: ' + status);

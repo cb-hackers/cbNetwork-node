@@ -105,15 +105,15 @@ Server.prototype.close = function () {
  *
  * @description Server calls this event on new messages. You can hook to it like this:
  * @example
- * // Include cbNetwork - this is to be changed to require('cbNetwork');
- * var cbNetwork = require('../src/cbNetwork');
+ * // Load up cbNetwork
+ * var cbNetwork = require('cbNetwork');
  *
  * // Create a new server at port 1337
- * var server = cbNetwork.Server(1337);
+ * var server = new cbNetwork.Server(1337);
  *
  * server.on('message', function (client) {
  *   client.reply(client.data);  // Simple echo server example
- * }
+ * });
  */
 
 exports.Server = Server;

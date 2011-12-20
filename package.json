@@ -1,0 +1,17 @@
+{
+    "name": "cbNetwork"
+  , "version": "v0.1.0"
+  , "description": "A Node.js implementation of cbNetwork, which is a CoolBasic library"
+  , "keywords": ["cbnetwork", "coolbasic", "udp"]
+  , "contributors": [
+      { "name": "Vesa Laakso", "email": "laakso.vesa@gmail.com", "url": "http://vesq.net" }
+    , { "name": "Ville Lahdenvuo", "email": "tuhoojabotti@gmail.com", "url": "http://tuhoojabotti.com" }
+    ]
+  , "repository": {
+        "type": "git"
+      , "url": "https://github.com/VesQ/cbNetwork-node.git"
+    }
+  , "main": "index"
+  , "bugs": "https://github.com/VesQ/cbNetwork-node/issues"
+  , "engines": { "node": ">= 0.6.0" }
+}

@@ -1,0 +1,4 @@
+## Stuff that shouldn't go to npm package
+doc/
+examples/
+tests/
