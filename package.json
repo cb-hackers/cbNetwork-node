@@ -1,6 +1,6 @@
 {
     "name": "cbNetwork"
-  , "version": "v0.1.0"
+  , "version": "v0.1.1"
   , "description": "A Node.js implementation of cbNetwork, which is a CoolBasic library"
   , "keywords": ["cbnetwork", "coolbasic", "udp"]
   , "contributors": [

@@ -69,6 +69,11 @@ function Server(port, address) {
     } else {
       // Already exists! Update port and data
       client = self._clients[data.clientId];
+      if (!client) {
+        console.log('Assigning client a new ID (' + data.clientId + ' -> ' + (self._clientCount + 1) + ')');
+        client = new Client(peer.address, peer.port, self._clientCount + 1, data, self._sock);
+        self._clients[++self._clientCount] = client;
+      }
       client.port = peer.port;
       client.data = data;
     }
