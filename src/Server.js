@@ -99,10 +99,11 @@ function Server(port, address) {
   this._sock.on('close', function () {
     log.info('Server closed gracefully');
   });
-
+  this._sock.on('listening', function () {
+    log.info('Server listening on %0:%1', (address ? address : '0.0.0.0').magenta, String(port).magenta);
+  });
   // Bind the server
   this._sock.bind(port, address);
-  log.info("Server listening on " + (address ? address : '0.0.0.0') + ":" + port);
 }
 
 Server.prototype.__proto__ = EventEmitter.prototype;
