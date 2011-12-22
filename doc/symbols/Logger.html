@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
-		<title>Client | JsDoc Reference</title>
+		<title>Logger | JsDoc Reference</title>
 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 		<meta name="mobileoptimized" content="0" />
@@ -70,12 +70,12 @@
 			<header>
 				<h1 class="classTitle">
 					
-					Class <span>Client</span>
+					Class <span>Logger</span>
 				</h1>
 				
 				<div class="intro">
 					<p class="description summary">
-						Includes client information, message and a reply function for convenience.
+						Creates a new logger with the desired prefix and timestamp
 					</p>
 						
 					
@@ -83,7 +83,7 @@
 							
 							
 							
-								<li>Defined in: <a href="../symbols/src/src_Server.js.html">Server.js</a></li>
+								<li>Defined in: <a href="../symbols/src/src_Logger.js.html">Logger.js</a></li>
 							
 							
 						</ul>
@@ -94,7 +94,7 @@
 			
 				<section>
 					<div class="props">
-						<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class Client.">
+						<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class Logger.">
 							<caption class="sectionTitle">Class Summary</caption>
 							<thead>
 								<tr>
@@ -104,12 +104,12 @@
 							</thead>
 							<tbody>
 								<tr>
-									<td class="attributes">&lt;private&gt; &nbsp;</td>
+									<td class="attributes">&nbsp;</td>
 									<td class="nameDescription" >
 										<div class="fixedFont">
-											<b><a href="../symbols/Client.html#constructor">Client</a></b>(address, port, id, data, _sock)
+											<b><a href="../symbols/Logger.html#constructor">Logger</a></b>(prefix)
 										</div>
-										<div class="description">A constructor for a new client.</div>
+										<div class="description"></div>
 									</td>
 								</tr>
 							</tbody>
@@ -124,7 +124,7 @@
 					
 						<nav>
 							<div class="props">
-								<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class Client.">
+								<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class Logger.">
 									<caption class="sectionTitle">Field Summary</caption>
 									
 									<thead>
@@ -137,12 +137,12 @@
 									<tbody>
 										
 											<tr>
-												<td class="attributes">&lt;private&gt; &nbsp;</td>
+												<td class="attributes">&nbsp;</td>
 												<td class="nameDescription">
 													<div class="fixedFont">
-													<b><a href="../symbols/Client.html#_sock">_sock</a></b>
+													<b><a href="../symbols/Logger.html#error">error</a></b>
 													</div>
-													<div class="description">Reference to server's UDP socket (used for answering to the client)</div>
+													<div class="description"></div>
 												</td>
 											</tr>
 										
@@ -150,39 +150,9 @@
 												<td class="attributes">&nbsp;</td>
 												<td class="nameDescription">
 													<div class="fixedFont">
-													<b><a href="../symbols/Client.html#address">address</a></b>
+													<b><a href="../symbols/Logger.html#warn">warn</a></b>
 													</div>
-													<div class="description">Client's address</div>
-												</td>
-											</tr>
-										
-											<tr>
-												<td class="attributes">&nbsp;</td>
-												<td class="nameDescription">
-													<div class="fixedFont">
-													<b><a href="../symbols/Client.html#data">data</a></b>
-													</div>
-													<div class="description">Client's message to the server</div>
-												</td>
-											</tr>
-										
-											<tr>
-												<td class="attributes">&nbsp;</td>
-												<td class="nameDescription">
-													<div class="fixedFont">
-													<b><a href="../symbols/Client.html#id">id</a></b>
-													</div>
-													<div class="description">Client's unique identifier</div>
-												</td>
-											</tr>
-										
-											<tr>
-												<td class="attributes">&nbsp;</td>
-												<td class="nameDescription">
-													<div class="fixedFont">
-													<b><a href="../symbols/Client.html#port">port</a></b>
-													</div>
-													<div class="description">Client's port</div>
+													<div class="description"></div>
 												</td>
 											</tr>
 										
@@ -207,7 +177,7 @@
 						
 						
 							<nav>
-								<table class="summaryTable" id="MethodsList" cellspacing="0" summary="A summary of the methods documented in the class Client.">
+								<table class="summaryTable" id="MethodsList" cellspacing="0" summary="A summary of the methods documented in the class Logger.">
 									<thead>
 										<tr>
 											<th scope="col">Method Attributes</th>
@@ -223,9 +193,20 @@
 											>
 												<td class="attributes">&nbsp;</td>
 												<td class="nameDescription">
-													<div class="fixedFont"><b><a href="../symbols/Client.html#reply">reply</a></b>(data)
+													<div class="fixedFont"><b><a href="../symbols/Logger.html#info">info</a></b>(msg)
 													</div>
-													<div class="description">Reply function replies to the client and automagically assigns correct client ID for the packet.</div>
+													<div class="description"></div>
+												</td>
+											</tr>
+										
+											<tr
+												 class='item1'
+											>
+												<td class="attributes">&nbsp;</td>
+												<td class="nameDescription">
+													<div class="fixedFont"><b><a href="../symbols/Logger.html#write">write</a></b>(msg)
+													</div>
+													<div class="description"></div>
 												</td>
 											</tr>
 										
@@ -254,12 +235,12 @@
 								Class Detail
 							</h2>
 							
-							<div class="fixedFont">&lt;private&gt; 
-								<b>Client</b>(address, port, id, data, _sock)
+							<div class="fixedFont">
+								<b>Logger</b>(prefix)
 							</div>
 							
 							<div class="description">
-								A constructor for a new client.
+								
 								
 							</div>
 							
@@ -270,38 +251,34 @@
 									<dt class="heading">Parameters:</dt>
 									
 										<dt>
-											<span class="light fixedFont">{String}</span>  <b>address</b>
-											
+											<span class="light fixedFont">{String}</span>  <b>prefix</b>
+											<i>Optional, Default: [Logger] (HH:MM:SS)</i>
 										</dt>
-										<dd>Client's address</dd>
-									
-										<dt>
-											<span class="light fixedFont">{Number}</span>  <b>port</b>
-											
-										</dt>
-										<dd>Client's port</dd>
-									
-										<dt>
-											<span class="light fixedFont">{Number}</span>  <b>id</b>
-											
-										</dt>
-										<dd>Client's unique identifier</dd>
-									
-										<dt>
-											<span class="light fixedFont">{<a href="../symbols/Packet.html">Packet</a>}</span>  <b>data</b>
-											
-										</dt>
-										<dd>Client's message to the server</dd>
-									
-										<dt>
-											<span class="light fixedFont">{UDP}</span>  <b>_sock</b>
-											
-										</dt>
-										<dd>Reference to server's UDP socket (used for answering to the client)</dd>
+										<dd>Message to apply to the start of the message %t will be replaced with a timestamp.
+                                               For example: '[My logger :) [%t]]' Will print [My logger :) [00:42:30]]</dd>
 									
 								</dl>
 							
 							
+							
+								<dl class="detailList nomargin">
+									
+									
+									
+									
+									
+									
+									
+									
+									
+										<dt class="heading">Requires:</dt>
+										
+											<dd>colors</dd>
+										
+									
+									
+									
+								</dl>
 							
 						</div>
 					</div>
@@ -319,18 +296,18 @@
 							</h2>
 							
 							
-								<div class="fixedFont heading" id="_sock">
+								<div class="fixedFont heading" id="error">
 									<span class='lighter'>
-									&lt;private&gt; 
+									
 									</span>
 									
-									<span class="light">{UDP}</span>
 									
-									<b>_sock</b>							
+									
+									<b>error</b>							
 								</div>
 								
 								<div class="description">
-									Reference to server's UDP socket (used for answering to the client)
+									
 									
 									
 									
@@ -341,84 +318,18 @@
 								
 								<div class="hr"></div>
 							
-								<div class="fixedFont heading" id="address">
+								<div class="fixedFont heading" id="warn">
 									<span class='lighter'>
 									
 									</span>
 									
-									<span class="light">{String}</span>
 									
-									<b>address</b>							
+									
+									<b>warn</b>							
 								</div>
 								
 								<div class="description">
-									Client's address
 									
-									
-									
-								</div>
-								
-								
-									
-								
-								<div class="hr"></div>
-							
-								<div class="fixedFont heading" id="data">
-									<span class='lighter'>
-									
-									</span>
-									
-									<span class="light">{<a href="../symbols/Packet.html">Packet</a>}</span>
-									
-									<b>data</b>							
-								</div>
-								
-								<div class="description">
-									Client's message to the server
-									
-									
-									
-								</div>
-								
-								
-									
-								
-								<div class="hr"></div>
-							
-								<div class="fixedFont heading" id="id">
-									<span class='lighter'>
-									
-									</span>
-									
-									<span class="light">{Number}</span>
-									
-									<b>id</b>							
-								</div>
-								
-								<div class="description">
-									Client's unique identifier
-									
-									
-									
-								</div>
-								
-								
-									
-								
-								<div class="hr"></div>
-							
-								<div class="fixedFont heading" id="port">
-									<span class='lighter'>
-									
-									</span>
-									
-									<span class="light">{Number}</span>
-									
-									<b>port</b>							
-								</div>
-								
-								<div class="description">
-									Client's port
 									
 									
 									
@@ -450,18 +361,18 @@
 									<li 
 										 class='item0'
 									>
-										<div class="fixedFont heading" id="reply">
+										<div class="fixedFont heading" id="info">
 											<span class='lighter'>
 											
 											</span>
 											
 											
 											
-											<b>reply</b>(data)
+											<b>info</b>(msg)
 										</div>
 										
 										<div class="description">
-											Reply function replies to the client and automagically assigns correct client ID for the packet.
+											
 											
 											
 											
@@ -475,10 +386,50 @@
 												<dt class="heading">Parameters:</dt>
 												
 													<dt>
-														<span class="light fixedFont">{<a href="../symbols/Packet.html">Packet</a>}</span> <b>data</b>
+														<span class="light fixedFont">{String}</span> <b>msg</b>
 														
 													</dt>
-													<dd>Data to send to client</dd>
+													<dd>Message to print green</dd>
+												
+											</dl>
+										
+										
+										
+										<div class="hr"></div>
+									</li>
+								
+									<li 
+										 class='item1'
+									>
+										<div class="fixedFont heading" id="write">
+											<span class='lighter'>
+											
+											</span>
+											
+											
+											
+											<b>write</b>(msg)
+										</div>
+										
+										<div class="description">
+											
+											
+											
+											
+											
+										</div>
+										
+										
+										
+										
+											<dl class="detailList params">
+												<dt class="heading">Parameters:</dt>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>msg</b>
+														
+													</dt>
+													<dd>Message to print</dd>
 												
 											</dl>
 										

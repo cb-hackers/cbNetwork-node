@@ -10,118 +10,130 @@
 <span class='line'>  3</span>  */</span><span class="WHIT">
 <span class='line'>  4</span> 
 <span class='line'>  5</span> </span><span class="COMM">/** @ignore */</span><span class="WHIT">
-<span class='line'>  6</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">dgram</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'dgram'</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>  7</span> </span><span class="WHIT">  </span><span class="NAME">EventEmitter</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">process.EventEmitter</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>  8</span> </span><span class="WHIT">  </span><span class="NAME">Packet</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'./Packet'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">Packet</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>  9</span> 
-<span class='line'> 10</span> </span><span class="COMM">/**
-<span class='line'> 11</span>  * A constructor for a new client.
-<span class='line'> 12</span>  * @private
-<span class='line'> 13</span>  *
-<span class='line'> 14</span>  * @class Includes client information, message and a reply function for convenience.
+<span class='line'>  6</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">dgram</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'dgram'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>  7</span> </span><span class="WHIT">  </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">EventEmitter</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">process.EventEmitter</span><span class="WHIT">
+<span class='line'>  8</span> </span><span class="WHIT">  </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">Packet</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'./Packet'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>  9</span> </span><span class="WHIT">  </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">colors</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'colors'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 10</span> </span><span class="WHIT">  </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">log</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'./Logger'</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">(</span><span class="STRN">'[cbNetwork] (%t) '</span><span class="PUNC">.</span><span class="NAME">cyan</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 11</span> 
+<span class='line'> 12</span> </span><span class="COMM">/**
+<span class='line'> 13</span>  * A constructor for a new client.
+<span class='line'> 14</span>  * @private
 <span class='line'> 15</span>  *
-<span class='line'> 16</span>  * @param {String} address  Client's address
-<span class='line'> 17</span>  * @param {Number} port     Client's port
-<span class='line'> 18</span>  * @param {Number} id       Client's unique identifier
-<span class='line'> 19</span>  * @param {Packet} data     Client's message to the server
-<span class='line'> 20</span>  * @param {UDP} _sock       Reference to server's UDP socket (used for answering to the client)
-<span class='line'> 21</span>  *
-<span class='line'> 22</span>  * @property {String} address  Client's address
-<span class='line'> 23</span>  * @property {Number} port     Client's port
-<span class='line'> 24</span>  * @property {Number} id       Client's unique identifier
-<span class='line'> 25</span>  * @property {Packet} data     Client's message to the server
-<span class='line'> 26</span>  * @property {UDP} _sock       Reference to server's UDP socket (used for answering to the client)
-<span class='line'> 27</span>  */</span><span class="WHIT">
-<span class='line'> 28</span> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">Client</span><span class="PUNC">(</span><span class="NAME">address</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">port</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">id</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">sock</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 29</span> </span><span class="WHIT">  </span><span class="NAME">this.address</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">address</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 30</span> </span><span class="WHIT">  </span><span class="NAME">this.port</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">port</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 31</span> </span><span class="WHIT">  </span><span class="NAME">this.id</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">id</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 32</span> </span><span class="WHIT">  </span><span class="NAME">this.data</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 33</span> </span><span class="WHIT">  </span><span class="NAME">this._sock</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">sock</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 34</span> </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 35</span> 
-<span class='line'> 36</span> </span><span class="COMM">/**
-<span class='line'> 37</span>  * Reply function replies to the client and automagically assigns correct client ID for the packet.
-<span class='line'> 38</span>  *
-<span class='line'> 39</span>  * @param {Packet} data  Data to send to client
-<span class='line'> 40</span>  */</span><span class="WHIT">
-<span class='line'> 41</span> </span><span class="NAME">Client.prototype.reply</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">data</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 42</span> </span><span class="WHIT">  </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">data</span><span class="WHIT"> </span><span class="KEYW">instanceof</span><span class="WHIT"> </span><span class="NAME">Packet</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">'Data must be a Packet object.'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 43</span> </span><span class="WHIT">  </span><span class="NAME">data.clientId</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.id</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 44</span> </span><span class="WHIT">  </span><span class="NAME">this._sock.send</span><span class="PUNC">(</span><span class="NAME">data.memBlock</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">data.memBlock.length</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.port</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.address</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 45</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 46</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 47</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 48</span> 
-<span class='line'> 49</span> </span><span class="COMM">/**
-<span class='line'> 50</span>  * Creates a new server.
-<span class='line'> 51</span>  *
-<span class='line'> 52</span>  * @class Server is an UDP server using Node's UDP API that works like the cbNetwork server.
-<span class='line'> 53</span>  * @requires dgram, {@link Packet}
-<span class='line'> 54</span>  *
-<span class='line'> 55</span>  * @param {Number} port        Port to bind to.
-<span class='line'> 56</span>  * @param {String} [address]   Address to attach to.
-<span class='line'> 57</span>  */</span><span class="WHIT">
-<span class='line'> 58</span> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">Server</span><span class="PUNC">(</span><span class="NAME">port</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">address</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 59</span> </span><span class="WHIT">  </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">self</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 60</span> </span><span class="WHIT">  </span><span class="NAME">this._clients</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 61</span> </span><span class="WHIT">  </span><span class="NAME">this._clientCount</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 62</span> </span><span class="WHIT">  </span><span class="NAME">this._sock</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">dgram.createSocket</span><span class="PUNC">(</span><span class="STRN">'udp4'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 63</span> </span><span class="WHIT">  </span><span class="NAME">this._sock.on</span><span class="PUNC">(</span><span class="STRN">'message'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">msg</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">peer</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 64</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">data</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Packet</span><span class="PUNC">(</span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Buffer</span><span class="PUNC">(</span><span class="NAME">msg</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">client</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 65</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">data.clientId</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 66</span> </span><span class="WHIT">      </span><span class="COMM">// Create a new client</span><span class="WHIT">
-<span class='line'> 67</span> </span><span class="WHIT">      </span><span class="NAME">client</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Client</span><span class="PUNC">(</span><span class="NAME">peer.address</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">peer.port</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">self._clientCount</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">self._sock</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 68</span> </span><span class="WHIT">      </span><span class="NAME">self._clients</span><span class="PUNC">[</span><span class="PUNC">++</span><span class="NAME">self._clientCount</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">client</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 69</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 70</span> </span><span class="WHIT">      </span><span class="COMM">// Already exists! Update port and data</span><span class="WHIT">
-<span class='line'> 71</span> </span><span class="WHIT">      </span><span class="NAME">client</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">self._clients</span><span class="PUNC">[</span><span class="NAME">data.clientId</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 72</span> </span><span class="WHIT">      </span><span class="NAME">client.port</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">peer.port</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 73</span> </span><span class="WHIT">      </span><span class="NAME">client.data</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 74</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 75</span> </span><span class="WHIT">    </span><span class="COMM">// Tell the server that we have a new message!</span><span class="WHIT">
-<span class='line'> 76</span> </span><span class="WHIT">    </span><span class="NAME">self.emit</span><span class="PUNC">(</span><span class="STRN">'message'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">client</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 77</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 78</span> 
-<span class='line'> 79</span> </span><span class="WHIT">  </span><span class="COMM">// Handle errors. Neat!</span><span class="WHIT">
-<span class='line'> 80</span> </span><span class="WHIT">  </span><span class="NAME">this._sock.on</span><span class="PUNC">(</span><span class="STRN">'error'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">e</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 81</span> </span><span class="WHIT">    </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">'UDP ERROR'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 82</span> </span><span class="WHIT">    </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="NAME">e</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 83</span> </span><span class="WHIT">    </span><span class="NAME">self.close</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="COMM">// Abandon ship!</span><span class="WHIT">
-<span class='line'> 84</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 85</span> </span><span class="WHIT">  </span><span class="NAME">this._sock.on</span><span class="PUNC">(</span><span class="STRN">'close'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 86</span> </span><span class="WHIT">    </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">'Server closed gracefully.'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 87</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 88</span> 
-<span class='line'> 89</span> </span><span class="WHIT">  </span><span class="COMM">// Bind the server</span><span class="WHIT">
-<span class='line'> 90</span> </span><span class="WHIT">  </span><span class="NAME">this._sock.bind</span><span class="PUNC">(</span><span class="NAME">port</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">address</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 91</span> </span><span class="WHIT">  </span><span class="NAME">console.log</span><span class="PUNC">(</span><span class="STRN">"Server listening on "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">address</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="NAME">address</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'0.0.0.0'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">":"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">port</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 92</span> </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 93</span> 
-<span class='line'> 94</span> </span><span class="NAME">Server.prototype.__proto__</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">EventEmitter.prototype</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 95</span> 
-<span class='line'> 96</span> </span><span class="COMM">/** Closes the socket abandoning all clients. */</span><span class="WHIT">
-<span class='line'> 97</span> </span><span class="NAME">Server.prototype.close</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 98</span> </span><span class="WHIT">  </span><span class="NAME">this._sock.close</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 99</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 16</span>  * @class Includes client information, message and a reply function for convenience.
+<span class='line'> 17</span>  *
+<span class='line'> 18</span>  * @param {String} address  Client's address
+<span class='line'> 19</span>  * @param {Number} port     Client's port
+<span class='line'> 20</span>  * @param {Number} id       Client's unique identifier
+<span class='line'> 21</span>  * @param {Packet} data     Client's message to the server
+<span class='line'> 22</span>  * @param {UDP} _sock       Reference to server's UDP socket (used for answering to the client)
+<span class='line'> 23</span>  *
+<span class='line'> 24</span>  * @property {String} address  Client's address
+<span class='line'> 25</span>  * @property {Number} port     Client's port
+<span class='line'> 26</span>  * @property {Number} id       Client's unique identifier
+<span class='line'> 27</span>  * @property {Packet} data     Client's message to the server
+<span class='line'> 28</span>  * @property {UDP} _sock       Reference to server's UDP socket (used for answering to the client)
+<span class='line'> 29</span>  */</span><span class="WHIT">
+<span class='line'> 30</span> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">Client</span><span class="PUNC">(</span><span class="NAME">address</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">port</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">id</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">sock</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 31</span> </span><span class="WHIT">  </span><span class="NAME">this.address</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">address</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 32</span> </span><span class="WHIT">  </span><span class="NAME">this.port</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">port</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 33</span> </span><span class="WHIT">  </span><span class="NAME">this.id</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">id</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 34</span> </span><span class="WHIT">  </span><span class="NAME">this.data</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 35</span> </span><span class="WHIT">  </span><span class="NAME">this._sock</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">sock</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 36</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 37</span> 
+<span class='line'> 38</span> </span><span class="COMM">/**
+<span class='line'> 39</span>  * Reply function replies to the client and automagically assigns correct client ID for the packet.
+<span class='line'> 40</span>  *
+<span class='line'> 41</span>  * @param {Packet} data  Data to send to client
+<span class='line'> 42</span>  */</span><span class="WHIT">
+<span class='line'> 43</span> </span><span class="NAME">Client.prototype.reply</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">data</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 44</span> </span><span class="WHIT">  </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">data</span><span class="WHIT"> </span><span class="KEYW">instanceof</span><span class="WHIT"> </span><span class="NAME">Packet</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">'Data must be a Packet object.'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 45</span> </span><span class="WHIT">  </span><span class="NAME">data.clientId</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.id</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 46</span> </span><span class="WHIT">  </span><span class="NAME">this._sock.send</span><span class="PUNC">(</span><span class="NAME">data.memBlock</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">data.memBlock.length</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.port</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.address</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 47</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 48</span> </span><span class="WHIT">      </span><span class="NAME">log.error</span><span class="PUNC">(</span><span class="STRN">'Unable to send data to client'</span><span class="PUNC">.</span><span class="NAME">red</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 49</span> </span><span class="WHIT">      </span><span class="NAME">console.dir</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 50</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 51</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 52</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 53</span> 
+<span class='line'> 54</span> </span><span class="COMM">/**
+<span class='line'> 55</span>  * Creates a new server.
+<span class='line'> 56</span>  *
+<span class='line'> 57</span>  * @class Server is an UDP server using Node's UDP API that works like the cbNetwork server.
+<span class='line'> 58</span>  * @requires dgram, colors, {@link Packet}
+<span class='line'> 59</span>  *
+<span class='line'> 60</span>  * @param {Number} port        Port to bind to.
+<span class='line'> 61</span>  * @param {String} [address]   Address to attach to.
+<span class='line'> 62</span>  */</span><span class="WHIT">
+<span class='line'> 63</span> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">Server</span><span class="PUNC">(</span><span class="NAME">port</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">address</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="WHIT">  </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">self</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="WHIT">  </span><span class="NAME">this._clients</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="WHIT">  </span><span class="NAME">this._clientCount</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 67</span> </span><span class="WHIT">  </span><span class="NAME">this._sock</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">dgram.createSocket</span><span class="PUNC">(</span><span class="STRN">'udp4'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 68</span> </span><span class="WHIT">  </span><span class="NAME">this._sock.on</span><span class="PUNC">(</span><span class="STRN">'message'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">msg</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">peer</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 69</span> </span><span class="WHIT">    </span><span class="COMM">// log.write('New packet!'.rainbow); // Awesome!</span><span class="WHIT">
+<span class='line'> 70</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">data</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Packet</span><span class="PUNC">(</span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Buffer</span><span class="PUNC">(</span><span class="NAME">msg</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">client</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 71</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">data.clientId</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 72</span> </span><span class="WHIT">      </span><span class="NAME">log.info</span><span class="PUNC">(</span><span class="STRN">'New client connected '</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">peer.address</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">' ('</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">self._clientCount</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">')'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">magenta</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 73</span> </span><span class="WHIT">      </span><span class="COMM">// Create a new client</span><span class="WHIT">
+<span class='line'> 74</span> </span><span class="WHIT">      </span><span class="NAME">client</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Client</span><span class="PUNC">(</span><span class="NAME">peer.address</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">peer.port</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">self._clientCount</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">self._sock</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 75</span> </span><span class="WHIT">      </span><span class="NAME">self._clients</span><span class="PUNC">[</span><span class="PUNC">++</span><span class="NAME">self._clientCount</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">client</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 76</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 77</span> </span><span class="WHIT">      </span><span class="COMM">// Already exists! Update port and data</span><span class="WHIT">
+<span class='line'> 78</span> </span><span class="WHIT">      </span><span class="NAME">client</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">self._clients</span><span class="PUNC">[</span><span class="NAME">data.clientId</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 79</span> </span><span class="WHIT">      </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">client</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">client.address</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="NAME">peer.address</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 80</span> </span><span class="WHIT">        </span><span class="NAME">log.notice</span><span class="PUNC">(</span><span class="STRN">'Assigning client a new ID '</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">'('</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">self._clientCount</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">')'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">magenta</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 81</span> </span><span class="WHIT">        </span><span class="NAME">client</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Client</span><span class="PUNC">(</span><span class="NAME">peer.address</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">peer.port</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">self._clientCount</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">self._sock</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 82</span> </span><span class="WHIT">        </span><span class="NAME">self._clients</span><span class="PUNC">[</span><span class="PUNC">++</span><span class="NAME">self._clientCount</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">client</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 83</span> </span><span class="WHIT">      </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 84</span> </span><span class="WHIT">      </span><span class="NAME">client.port</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">peer.port</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 85</span> </span><span class="WHIT">      </span><span class="NAME">client.data</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 86</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 87</span> </span><span class="WHIT">    </span><span class="COMM">// Tell the server that we have a new message!</span><span class="WHIT">
+<span class='line'> 88</span> </span><span class="WHIT">    </span><span class="NAME">self.emit</span><span class="PUNC">(</span><span class="STRN">'message'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">client</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 89</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 90</span> 
+<span class='line'> 91</span> </span><span class="WHIT">  </span><span class="COMM">// Handle errors. Neat!</span><span class="WHIT">
+<span class='line'> 92</span> </span><span class="WHIT">  </span><span class="NAME">this._sock.on</span><span class="PUNC">(</span><span class="STRN">'error'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">e</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 93</span> </span><span class="WHIT">    </span><span class="NAME">log.fatal</span><span class="PUNC">(</span><span class="STRN">'UDP ERROR'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 94</span> </span><span class="WHIT">    </span><span class="NAME">console.dir</span><span class="PUNC">(</span><span class="NAME">e</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 95</span> </span><span class="WHIT">    </span><span class="NAME">self.close</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="COMM">// Abandon ship!</span><span class="WHIT">
+<span class='line'> 96</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 97</span> </span><span class="WHIT">  </span><span class="NAME">this._sock.on</span><span class="PUNC">(</span><span class="STRN">'close'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 98</span> </span><span class="WHIT">    </span><span class="NAME">log.info</span><span class="PUNC">(</span><span class="STRN">'Server closed gracefully'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 99</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>100</span> 
-<span class='line'>101</span> </span><span class="COMM">/**
-<span class='line'>102</span>  * @name Server#message
-<span class='line'>103</span>  * @event
-<span class='line'>104</span>  * @param {Client} client  Client instance with all the information you need.
-<span class='line'>105</span>  *
-<span class='line'>106</span>  * @description Server calls this event on new messages. You can hook to it like this:
-<span class='line'>107</span>  * @example
-<span class='line'>108</span>  * // Load up cbNetwork
-<span class='line'>109</span>  * var cbNetwork = require('cbNetwork');
-<span class='line'>110</span>  *
-<span class='line'>111</span>  * // Create a new server at port 1337
-<span class='line'>112</span>  * var server = new cbNetwork.Server(1337);
-<span class='line'>113</span>  *
-<span class='line'>114</span>  * server.on('message', function (client) {
-<span class='line'>115</span>  *   client.reply(client.data);  // Simple echo server example
-<span class='line'>116</span>  * });
-<span class='line'>117</span>  */</span><span class="WHIT">
-<span class='line'>118</span> 
-<span class='line'>119</span> </span><span class="NAME">exports.Server</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Server</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>120</span> </span></pre></body></html>
+<span class='line'>101</span> </span><span class="WHIT">  </span><span class="COMM">// Bind the server</span><span class="WHIT">
+<span class='line'>102</span> </span><span class="WHIT">  </span><span class="NAME">this._sock.bind</span><span class="PUNC">(</span><span class="NAME">port</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">address</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>103</span> </span><span class="WHIT">  </span><span class="NAME">log.info</span><span class="PUNC">(</span><span class="STRN">"Server listening on "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">address</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="NAME">address</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'0.0.0.0'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">":"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">port</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>104</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>105</span> 
+<span class='line'>106</span> </span><span class="NAME">Server.prototype.__proto__</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">EventEmitter.prototype</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>107</span> 
+<span class='line'>108</span> </span><span class="COMM">/** Closes the socket abandoning all clients. */</span><span class="WHIT">
+<span class='line'>109</span> </span><span class="NAME">Server.prototype.close</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>110</span> </span><span class="WHIT">  </span><span class="NAME">this._sock.close</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>111</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>112</span> 
+<span class='line'>113</span> </span><span class="COMM">/**
+<span class='line'>114</span>  * @name Server#message
+<span class='line'>115</span>  * @event
+<span class='line'>116</span>  * @param {Client} client  Client instance with all the information you need.
+<span class='line'>117</span>  *
+<span class='line'>118</span>  * @description Server calls this event on new messages. You can hook to it like this:
+<span class='line'>119</span>  * @example
+<span class='line'>120</span>  * // Load up cbNetwork
+<span class='line'>121</span>  * var cbNetwork = require('cbNetwork');
+<span class='line'>122</span>  *
+<span class='line'>123</span>  * // Create a new server at port 1337
+<span class='line'>124</span>  * var server = new cbNetwork.Server(1337);
+<span class='line'>125</span>  *
+<span class='line'>126</span>  * server.on('message', function (client) {
+<span class='line'>127</span>  *   client.reply(client.data);  // Simple echo server example
+<span class='line'>128</span>  * });
+<span class='line'>129</span>  */</span><span class="WHIT">
+<span class='line'>130</span> 
+<span class='line'>131</span> </span><span class="NAME">exports</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">module.exports</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Server</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>132</span> </span></pre></body></html>
