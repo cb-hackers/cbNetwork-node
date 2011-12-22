@@ -7,20 +7,19 @@
  *            binding them into one module to be required in your project.
  */
 var cbNetwork = {
-  /**
-    The {@link HTTP} module
-   */
-  HTTP: require('./HTTP').HTTP,
-  /**
-    The {@link Server} module
-   */
-  Server: require('./Server').Server,
-  /**
-    The {@link Packet} module
-   */
-  Packet: require('./Packet').Packet
+  /** The {@link HTTP} module */
+  HTTP: require('./HTTP'),
+  /** The {@link Server} module */
+  Server: require('./Server'),
+  /** The {@link Packet} module */
+  Packet: require('./Packet'),
+  /** The {@link Logger} module */
+  Logger: require('./Logger')
 };
 
+exports = module.exports = cbNetwork;
+/*
 exports.HTTP = cbNetwork.HTTP;
 exports.Server = cbNetwork.Server;
 exports.Packet = cbNetwork.Packet;
+*/

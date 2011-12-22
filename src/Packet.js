@@ -2,8 +2,6 @@
 * @fileOverview This file has the implementation of {@link Packet} class.
 */
 
-exports.Packet = Packet;
-
 /**
  * Creates a new Buffer. Always define size when creating a new Packet if possible.
  * Writing to a buffer with undefined size causes resize function to create and copy
@@ -222,3 +220,5 @@ Packet.prototype.__defineSetter__('clientId', function (value) {
   }
   this.memBlock.writeInt32LE(value, 0);
 });
+
+exports = module.exports = Packet;

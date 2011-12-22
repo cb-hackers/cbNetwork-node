@@ -43,4 +43,4 @@ HTTP.get = function (url, cb) {
   });
 };
 
-exports.HTTP = HTTP;
+exports = module.exports = HTTP;

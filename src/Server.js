@@ -3,9 +3,11 @@
  */
 
 /** @ignore */
-var dgram = require('dgram'),
-  EventEmitter = process.EventEmitter,
-  Packet = require('./Packet').Packet;
+var dgram = require('dgram')
+  , EventEmitter = process.EventEmitter
+  , Packet = require('./Packet')
+  , colors = require('colors')
+  , log = new (require('./Logger'))('[cbNetwork] (%t) '.cyan);
 
 /**
  * A constructor for a new client.
@@ -42,7 +44,10 @@ Client.prototype.reply = function (data) {
   if (!data instanceof Packet) {throw Error('Data must be a Packet object.');}
   data.clientId = this.id;
   this._sock.send(data.memBlock, 0, data.memBlock.length, this.port, this.address, function (err) {
-    if (err) {console.log(err);}
+    if (err) {
+      log.error('Unable to send data to client'.red);
+      console.dir(err);
+    }
   });
 };
 
@@ -50,7 +55,7 @@ Client.prototype.reply = function (data) {
  * Creates a new server.
  *
  * @class Server is an UDP server using Node's UDP API that works like the cbNetwork server.
- * @requires dgram, {@link Packet}
+ * @requires dgram, colors, {@link Packet}
  *
  * @param {Number} port        Port to bind to.
  * @param {String} [address]   Address to attach to.
@@ -61,8 +66,10 @@ function Server(port, address) {
   this._clientCount = 0;
   this._sock = dgram.createSocket('udp4');
   this._sock.on('message', function (msg, peer) {
+    // log.write('New packet!'.rainbow); // Awesome!
     var data = new Packet(new Buffer(msg)), client;
     if( data.clientId === 0 ) {
+      log.info('New client connected ' + (peer.address + ' (' + (self._clientCount + 1) + ')').magenta);
       // Create a new client
       client = new Client(peer.address, peer.port, self._clientCount + 1, data, self._sock);
       self._clients[++self._clientCount] = client;
@@ -70,7 +77,7 @@ function Server(port, address) {
       // Already exists! Update port and data
       client = self._clients[data.clientId];
       if (!client || client.address !== peer.address) {
-        console.log('Assigning client a new ID (' + (self._clientCount + 1) + ')');
+        log.notice('Assigning client a new ID ' + ('(' + (self._clientCount + 1) + ')').magenta);
         client = new Client(peer.address, peer.port, self._clientCount + 1, data, self._sock);
         self._clients[++self._clientCount] = client;
       }
@@ -83,17 +90,17 @@ function Server(port, address) {
 
   // Handle errors. Neat!
   this._sock.on('error', function (e) {
-    console.log('UDP ERROR');
-    console.log(e);
+    log.fatal('UDP ERROR');
+    console.dir(e);
     self.close(); // Abandon ship!
   });
   this._sock.on('close', function () {
-    console.log('Server closed gracefully.');
+    log.info('Server closed gracefully');
   });
 
   // Bind the server
   this._sock.bind(port, address);
-  console.log("Server listening on " + (address ? address : '0.0.0.0') + ":" + port);
+  log.info("Server listening on " + (address ? address : '0.0.0.0') + ":" + port);
 }
 
 Server.prototype.__proto__ = EventEmitter.prototype;
@@ -121,4 +128,4 @@ Server.prototype.close = function () {
  * });
  */
 
-exports.Server = Server;
+exports = module.exports = Server;

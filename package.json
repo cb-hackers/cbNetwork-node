@@ -1,17 +1,18 @@
 {
-    "name": "cbNetwork"
-  , "version": "v0.1.2"
-  , "description": "A Node.js implementation of cbNetwork, which is a CoolBasic library"
-  , "keywords": ["cbnetwork", "coolbasic", "udp"]
-  , "contributors": [
-      { "name": "Vesa Laakso", "email": "laakso.vesa@gmail.com", "url": "http://vesq.net" }
-    , { "name": "Ville Lahdenvuo", "email": "tuhoojabotti@gmail.com", "url": "http://tuhoojabotti.com" }
-    ]
-  , "repository": {
-        "type": "git"
-      , "url": "https://github.com/VesQ/cbNetwork-node.git"
-    }
-  , "main": "index"
-  , "bugs": "https://github.com/VesQ/cbNetwork-node/issues"
-  , "engines": { "node": ">= 0.6.0" }
+  "name": "cbNetwork", 
+  "version": "v0.1.3",
+  "description": "A Node.js implementation of cbNetwork, which is a CoolBasic library",
+  "contributors": [
+    { "name": "Vesa Laakso", "email": "laakso.vesa@gmail.com", "url": "http://vesq.net" },
+    { "name": "Ville Lahdenvuo", "email": "tuhoojabotti@gmail.com", "url": "http://tuhoojabotti.com" }
+  ],
+  "main": "index",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/VesQ/cbNetwork-node.git"
+  },
+  "keywords": ["cbnetwork", "coolbasic", "udp"],
+  "dependencies": {"colors" : "*"},
+  "bugs": "https://github.com/VesQ/cbNetwork-node/issues",
+  "engines": { "node": ">=0.6.0" }
 }

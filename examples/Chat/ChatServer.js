@@ -1,11 +1,13 @@
 // Requires cbNetwork and node-optimist: https://github.com/substack/node-optimist
-var cbNetwork = require('cbNetwork');
-var Packet = cbNetwork.Packet;
-var argv = require('optimist')
+var cbNetwork = require('cbNetwork')
+  , Packet = cbNetwork.Packet
+  , argv = require('optimist')
     .default({p : 1337, a : undefined})
     .alias({'p' : 'port', 'a' : 'address', 'd' : 'debug'})
-    .argv;
-
+    .argv
+  , tty = require('tty')
+  , colors = require('colors')
+  , log = new cbNetwork.Logger('[Chat %t] '.grey);
 var clients = [];
 var messages = [];
 
@@ -24,6 +26,15 @@ var NET = {
 // Create a server on a port specified in command line or if not specified, use the default 1337
 var server = new cbNetwork.Server(argv.p, argv.a);
 
+// Enable graceful exit
+process.stdin.resume();
+tty.setRawMode(true);
+process.stdin.on('keypress', function(char, key) {
+  if (key && key.ctrl && key.name == 'c') {
+    server.close(); // Close the server gracefully
+    process.exit()
+  }
+});
 
 // Handle messages from clients
 server.on('message', function (client) {
@@ -34,7 +45,7 @@ server.on('message', function (client) {
     case NET.LOGIN:
       var name = data.getString();
       if (name.trim() === '') {
-        console.log(client.id + ': Login failed! Nickname is invalid.');
+        log.warn('Login failed! Nickname is invalid ' + ('(' + client.id + ')').magenta);
         var reply = new Packet(2);
         reply.putByte(NET.LOGIN_FAILED);
         reply.putByte(NET.END);
@@ -42,7 +53,7 @@ server.on('message', function (client) {
         return;
       }
       // Nice a new chatter! Let's add him/her to the client list
-      console.log(name + ' <' + client.id + '> just entered the chat!');
+      log.info('Join "' + name + '" ' + ('(' + client.id + ')').magenta);
       createClient(client.id, name);
       // Let's send a packet telling everything went better than expected.png
       var reply = new Packet();
@@ -59,7 +70,7 @@ server.on('message', function (client) {
       client.reply(reply);
       return;
     case NET.LOGOUT:
-      console.log(client.id + ' logged out.');
+      log.info('Logout ' + ('(' + client.id + ')').magenta);
       deleteClient(client.id);
       return;
   }
@@ -84,8 +95,7 @@ server.on('message', function (client) {
         // Well thanks for the info!
         break;
       default:
-        console.log('UNKOWN MESSAGE');
-        console.log('Message-ID: ' + netMsg);
+        log.error('UNKOWN MESSAGE ID: ' + netMsg);
     }
     // Read next message's type
     netMsg = data.getByte();
@@ -118,7 +128,7 @@ server.on('message', function (client) {
 setInterval(function () {
   for (var i = 0; i < clients.length; i++) {
     if (clients[i].lastActivity + 5000 < new Date().getTime()) {
-      console.log('Timeout ' + clients[i].id);
+      log.warn('Timeout ' + ('(' + clients[i].id + ')').magenta);
       deleteClient(clients[i].id);
     }
   }
@@ -177,7 +187,7 @@ function deleteClient(clientID) {
 }
 
 function sendText(text, clientID, toClient) {
-  console.log('<' + clientID + '> ' + text);
+  log.write(('<' + clientID + '> ').magenta + text);
   // Create new messages to the queue for all clients
   for (var i = 0; i < clients.length; i++) {
     if (!toClient || toClient === clients[i].id) {
