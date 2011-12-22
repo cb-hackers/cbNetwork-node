@@ -18,8 +18,3 @@ var cbNetwork = {
 };
 
 exports = module.exports = cbNetwork;
-/*
-exports.HTTP = cbNetwork.HTTP;
-exports.Server = cbNetwork.Server;
-exports.Packet = cbNetwork.Packet;
-*/
