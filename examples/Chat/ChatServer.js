@@ -45,7 +45,7 @@ server.on('message', function (client) {
     case NET.LOGIN:
       var name = data.getString();
       if (name.trim() === '') {
-        log.warn('Login failed! Nickname is invalid ' + ('(' + client.id + ')').magenta);
+        log.warn('Login failed! Nickname is invalid (%0)', client.id.magenta);
         var reply = new Packet(2);
         reply.putByte(NET.LOGIN_FAILED);
         reply.putByte(NET.END);
@@ -53,7 +53,7 @@ server.on('message', function (client) {
         return;
       }
       // Nice a new chatter! Let's add him/her to the client list
-      log.info('Join "' + name + '" ' + ('(' + client.id + ')').magenta);
+      log.info('Join "%0" (%1)', name.magenta, client.id.magenta);
       createClient(client.id, name);
       // Let's send a packet telling everything went better than expected.png
       var reply = new Packet();
@@ -62,7 +62,7 @@ server.on('message', function (client) {
       // Also send all client's info
       for (var i = 0; i < clients.length; i++) {
         reply.putByte(NET.CLIENT_INFO);
-        reply.putString('' + clients[i].id);
+        reply.putString(clients[i].id);
         reply.putString(clients[i].nick);
       }
       // Aand it's gone!
@@ -70,7 +70,7 @@ server.on('message', function (client) {
       client.reply(reply);
       return;
     case NET.LOGOUT:
-      log.info('Logout ' + ('(' + client.id + ')').magenta);
+      log.info('Logout (%0)', client.id.magenta);
       deleteClient(client.id);
       return;
   }
@@ -95,7 +95,7 @@ server.on('message', function (client) {
         // Well thanks for the info!
         break;
       default:
-        log.error('UNKOWN MESSAGE ID: ' + netMsg);
+        log.error('UNKOWN MESSAGE ID: %0 from (%1)', netMsg, client.id.magenta);
     }
     // Read next message's type
     netMsg = data.getByte();
@@ -128,7 +128,7 @@ server.on('message', function (client) {
 setInterval(function () {
   for (var i = 0; i < clients.length; i++) {
     if (clients[i].lastActivity + 5000 < new Date().getTime()) {
-      log.warn('Timeout ' + ('(' + clients[i].id + ')').magenta);
+      log.warn('Timeout (%0)', clients[i].id.magenta);
       deleteClient(clients[i].id);
     }
   }
@@ -187,7 +187,7 @@ function deleteClient(clientID) {
 }
 
 function sendText(text, clientID, toClient) {
-  log.write(('<' + clientID + '> ').magenta + text);
+  log.write('<%0> %1', clientID.magenta, text.green);
   // Create new messages to the queue for all clients
   for (var i = 0; i < clients.length; i++) {
     if (!toClient || toClient === clients[i].id) {

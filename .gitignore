@@ -3,3 +3,6 @@
 
 ## Stupid windows.
 Thumbs.db
+
+## Don't put npm linked stuff to git
+node_modules/
