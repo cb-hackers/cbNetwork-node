@@ -7,7 +7,7 @@ var dgram = require('dgram')
   , EventEmitter = process.EventEmitter
   , Packet = require('./Packet')
   , colors = require('colors')
-  , log = new (require('./Logger'))('[cbNetwork] (%t) '.cyan);
+  , log = new (require('./Logger'))('[cbNetwork %t] '.cyan);
 
 /**
  * A constructor for a new client.
@@ -23,14 +23,16 @@ var dgram = require('dgram')
  *
  * @property {String} address  Client's address
  * @property {Number} port     Client's port
- * @property {Number} id       Client's unique identifier
+ * @property {String} id       Client's unique identifier, cbNetwork style
+ * @property {Number} uid      Client's numeral id 1...2^32
  * @property {Packet} data     Client's message to the server
  * @property {UDP} _sock       Reference to server's UDP socket (used for answering to the client)
  */
 function Client(address, port, id, data, sock) {
   this.address = address;
   this.port = port;
-  this.id = id;
+  this.uid = id;
+  this.id = address + ':' + id;
   this.data = data;
   this._sock = sock;
 }
@@ -42,7 +44,7 @@ function Client(address, port, id, data, sock) {
  */
 Client.prototype.reply = function (data) {
   if (!data instanceof Packet) {throw Error('Data must be a Packet object.');}
-  data.clientId = this.id;
+  data.clientId = this.uid;
   this._sock.send(data.memBlock, 0, data.memBlock.length, this.port, this.address, function (err) {
     if (err) {
       log.error('Unable to send data to client'.red);
@@ -69,7 +71,7 @@ function Server(port, address) {
     // log.write('New packet!'.rainbow); // Awesome!
     var data = new Packet(new Buffer(msg)), client;
     if( data.clientId === 0 ) {
-      log.info('New client connected ' + (peer.address + ' (' + (self._clientCount + 1) + ')').magenta);
+      log.info('New client connected %0 (%1)', peer.address.magenta, String(self._clientCount + 1).magenta);
       // Create a new client
       client = new Client(peer.address, peer.port, self._clientCount + 1, data, self._sock);
       self._clients[++self._clientCount] = client;
@@ -77,7 +79,7 @@ function Server(port, address) {
       // Already exists! Update port and data
       client = self._clients[data.clientId];
       if (!client || client.address !== peer.address) {
-        log.notice('Assigning client a new ID ' + ('(' + (self._clientCount + 1) + ')').magenta);
+        log.notice('Assigning %0 a new ID (%1)', peer.address.magenta, String(self._clientCount + 1).magenta);
         client = new Client(peer.address, peer.port, self._clientCount + 1, data, self._sock);
         self._clients[++self._clientCount] = client;
       }
