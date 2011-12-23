@@ -57,7 +57,7 @@
 			Documentation generator: <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0<br />
 			Template: <a href="http://www.thebrightlines.com/2010/05/06/new-template-for-jsdoctoolkit-codeview/" target="_blank">Codeview</a> 1.2<br />
 			Generated on:
-			<time datetime='2011-11-22' pubdate>2011-11-22 15:03</time>
+			<time datetime='2011-11-23' pubdate>2011-11-23 15:08</time>
 		</footer>
 	</div>
 </div>
@@ -119,52 +119,6 @@
 			
 			
 			
-				
-				<section>
-					
-						<nav>
-							<div class="props">
-								<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class Logger.">
-									<caption class="sectionTitle">Field Summary</caption>
-									
-									<thead>
-										<tr>
-											<th scope="col">Field Attributes</th>
-											<th scope="col">Field Name and Description</th>
-										</tr>
-									</thead>
-									
-									<tbody>
-										
-											<tr>
-												<td class="attributes">&nbsp;</td>
-												<td class="nameDescription">
-													<div class="fixedFont">
-													<b><a href="../symbols/Logger.html#error">error</a></b>
-													</div>
-													<div class="description"></div>
-												</td>
-											</tr>
-										
-											<tr>
-												<td class="attributes">&nbsp;</td>
-												<td class="nameDescription">
-													<div class="fixedFont">
-													<b><a href="../symbols/Logger.html#warn">warn</a></b>
-													</div>
-													<div class="description"></div>
-												</td>
-											</tr>
-										
-									</tbody>
-								</table>
-							</div>
-						</nav>
-					
-					
-					
-				</section>
-			
 	<!--
 	#### METHODS SUMMARY
 	-->
@@ -193,7 +147,7 @@
 											>
 												<td class="attributes">&nbsp;</td>
 												<td class="nameDescription">
-													<div class="fixedFont"><b><a href="../symbols/Logger.html#info">info</a></b>(msg)
+													<div class="fixedFont"><b><a href="../symbols/Logger.html#error">error</a></b>(msg, var0, var1, varN)
 													</div>
 													<div class="description"></div>
 												</td>
@@ -201,6 +155,50 @@
 										
 											<tr
 												 class='item1'
+											>
+												<td class="attributes">&nbsp;</td>
+												<td class="nameDescription">
+													<div class="fixedFont"><b><a href="../symbols/Logger.html#fatal">fatal</a></b>(msg, var0, var1, varN)
+													</div>
+													<div class="description"></div>
+												</td>
+											</tr>
+										
+											<tr
+												 class='item2'
+											>
+												<td class="attributes">&nbsp;</td>
+												<td class="nameDescription">
+													<div class="fixedFont"><b><a href="../symbols/Logger.html#info">info</a></b>(msg, var0, var1, varN)
+													</div>
+													<div class="description"></div>
+												</td>
+											</tr>
+										
+											<tr
+												 class='item3'
+											>
+												<td class="attributes">&nbsp;</td>
+												<td class="nameDescription">
+													<div class="fixedFont"><b><a href="../symbols/Logger.html#notice">notice</a></b>(msg, var0, var1, varN)
+													</div>
+													<div class="description"></div>
+												</td>
+											</tr>
+										
+											<tr
+												 class='item4'
+											>
+												<td class="attributes">&nbsp;</td>
+												<td class="nameDescription">
+													<div class="fixedFont"><b><a href="../symbols/Logger.html#warn">warn</a></b>(msg, var0, var1, varN)
+													</div>
+													<div class="description"></div>
+												</td>
+											</tr>
+										
+											<tr
+												 class='item5'
 											>
 												<td class="attributes">&nbsp;</td>
 												<td class="nameDescription">
@@ -252,7 +250,7 @@
 									
 										<dt>
 											<span class="light fixedFont">{String}</span>  <b>prefix</b>
-											<i>Optional, Default: [Logger] (HH:MM:SS)</i>
+											<i>Optional</i>
 										</dt>
 										<dd>Message to apply to the start of the message %t will be replaced with a timestamp.
                                                For example: '[My logger :) [%t]]' Will print [My logger :) [00:42:30]]</dd>
@@ -288,62 +286,6 @@
 	#### FIELD DETAILS
 	-->
 			
-				<section>
-					<div class="details props">
-						<div class="innerProps">
-							<h2 class="sectionTitle">
-								Field Detail
-							</h2>
-							
-							
-								<div class="fixedFont heading" id="error">
-									<span class='lighter'>
-									
-									</span>
-									
-									
-									
-									<b>error</b>							
-								</div>
-								
-								<div class="description">
-									
-									
-									
-									
-								</div>
-								
-								
-									
-								
-								<div class="hr"></div>
-							
-								<div class="fixedFont heading" id="warn">
-									<span class='lighter'>
-									
-									</span>
-									
-									
-									
-									<b>warn</b>							
-								</div>
-								
-								<div class="description">
-									
-									
-									
-									
-								</div>
-								
-								
-									
-								
-								
-							
-						</div>
-					</div>
-				</section>
-			
 	<!--
 	#### METHOD DETAILS
 	-->		
@@ -361,14 +303,14 @@
 									<li 
 										 class='item0'
 									>
-										<div class="fixedFont heading" id="info">
+										<div class="fixedFont heading" id="error">
 											<span class='lighter'>
 											
 											</span>
 											
 											
 											
-											<b>info</b>(msg)
+											<b>error</b>(msg, var0, var1, varN)
 										</div>
 										
 										<div class="description">
@@ -389,7 +331,25 @@
 														<span class="light fixedFont">{String}</span> <b>msg</b>
 														
 													</dt>
-													<dd>Message to print green</dd>
+													<dd>Message to print with a red & bold [ERROR]-tag</dd>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>var0</b>
+														<i>Optional</i>
+													</dt>
+													<dd>Variable to replace %0 from msg</dd>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>var1</b>
+														<i>Optional</i>
+													</dt>
+													<dd>Variable to replace %1 from msg</dd>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>varN</b>
+														<i>Optional</i>
+													</dt>
+													<dd>Variable to replace %n from msg and so forth</dd>
 												
 											</dl>
 										
@@ -400,6 +360,238 @@
 								
 									<li 
 										 class='item1'
+									>
+										<div class="fixedFont heading" id="fatal">
+											<span class='lighter'>
+											
+											</span>
+											
+											
+											
+											<b>fatal</b>(msg, var0, var1, varN)
+										</div>
+										
+										<div class="description">
+											
+											
+											
+											
+											
+										</div>
+										
+										
+										
+										
+											<dl class="detailList params">
+												<dt class="heading">Parameters:</dt>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>msg</b>
+														
+													</dt>
+													<dd>Message to print with a red & bold [FATAL]-tag</dd>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>var0</b>
+														<i>Optional</i>
+													</dt>
+													<dd>Variable to replace %0 from msg</dd>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>var1</b>
+														<i>Optional</i>
+													</dt>
+													<dd>Variable to replace %1 from msg</dd>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>varN</b>
+														<i>Optional</i>
+													</dt>
+													<dd>Variable to replace %n from msg and so forth</dd>
+												
+											</dl>
+										
+										
+										
+										<div class="hr"></div>
+									</li>
+								
+									<li 
+										 class='item2'
+									>
+										<div class="fixedFont heading" id="info">
+											<span class='lighter'>
+											
+											</span>
+											
+											
+											
+											<b>info</b>(msg, var0, var1, varN)
+										</div>
+										
+										<div class="description">
+											
+											
+											
+											
+											
+										</div>
+										
+										
+										
+										
+											<dl class="detailList params">
+												<dt class="heading">Parameters:</dt>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>msg</b>
+														
+													</dt>
+													<dd>Message to print with a green [INFO]-tag</dd>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>var0</b>
+														<i>Optional</i>
+													</dt>
+													<dd>Variable to replace %0 from msg</dd>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>var1</b>
+														<i>Optional</i>
+													</dt>
+													<dd>Variable to replace %1 from msg</dd>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>varN</b>
+														<i>Optional</i>
+													</dt>
+													<dd>Variable to replace %n from msg and so forth</dd>
+												
+											</dl>
+										
+										
+										
+										<div class="hr"></div>
+									</li>
+								
+									<li 
+										 class='item3'
+									>
+										<div class="fixedFont heading" id="notice">
+											<span class='lighter'>
+											
+											</span>
+											
+											
+											
+											<b>notice</b>(msg, var0, var1, varN)
+										</div>
+										
+										<div class="description">
+											
+											
+											
+											
+											
+										</div>
+										
+										
+										
+										
+											<dl class="detailList params">
+												<dt class="heading">Parameters:</dt>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>msg</b>
+														
+													</dt>
+													<dd>Message to print with a yellow [NOTICE]-tag</dd>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>var0</b>
+														<i>Optional</i>
+													</dt>
+													<dd>Variable to replace %0 from msg</dd>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>var1</b>
+														<i>Optional</i>
+													</dt>
+													<dd>Variable to replace %1 from msg</dd>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>varN</b>
+														<i>Optional</i>
+													</dt>
+													<dd>Variable to replace %n from msg and so forth</dd>
+												
+											</dl>
+										
+										
+										
+										<div class="hr"></div>
+									</li>
+								
+									<li 
+										 class='item4'
+									>
+										<div class="fixedFont heading" id="warn">
+											<span class='lighter'>
+											
+											</span>
+											
+											
+											
+											<b>warn</b>(msg, var0, var1, varN)
+										</div>
+										
+										<div class="description">
+											
+											
+											
+											
+											
+										</div>
+										
+										
+										
+										
+											<dl class="detailList params">
+												<dt class="heading">Parameters:</dt>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>msg</b>
+														
+													</dt>
+													<dd>Message to print with a yellow [WARN]-tag</dd>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>var0</b>
+														<i>Optional</i>
+													</dt>
+													<dd>Variable to replace %0 from msg</dd>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>var1</b>
+														<i>Optional</i>
+													</dt>
+													<dd>Variable to replace %1 from msg</dd>
+												
+													<dt>
+														<span class="light fixedFont">{String}</span> <b>varN</b>
+														<i>Optional</i>
+													</dt>
+													<dd>Variable to replace %n from msg and so forth</dd>
+												
+											</dl>
+										
+										
+										
+										<div class="hr"></div>
+									</li>
+								
+									<li 
+										 class='item5'
 									>
 										<div class="fixedFont heading" id="write">
 											<span class='lighter'>
