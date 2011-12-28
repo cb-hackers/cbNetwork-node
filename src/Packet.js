@@ -127,7 +127,10 @@ Packet.prototype.__defineGetter__('clientId', function (value) {
  * @throws {TypeError}    If value not a Number or not in range
  */
 Packet.prototype.putByte = function (value) {
-  if ('number' !== typeof value || value < 0 || value > 255) {
+  if ('boolean' === typeof value) {
+    // Convert a boolean to a number
+    value = Number(value);
+  } else if ('number' !== typeof value || value < 0 || value > 255) {
     throw TypeError('Byte to write must be Number and in range 0...255');
   }
   this.resize(1); // Resize memBlock if needed
@@ -141,7 +144,10 @@ Packet.prototype.putByte = function (value) {
  * @throws {TypeError}    If value not a Number or not in range
  */
 Packet.prototype.putShort = function (value) {
-  if ('number' !== typeof value || value < -32768 || value > 32768) {
+  if ('boolean' === typeof value) {
+    // Convert a boolean to a number
+    value = Number(value);
+  } else if ('number' !== typeof value || value < -32768 || value > 32768) {
     throw TypeError('Short to write must be Number and in range -32768...32768');
   }
   this.resize(2); // Resize memBlock if needed
@@ -156,7 +162,10 @@ Packet.prototype.putShort = function (value) {
  * @throws {TypeError}    If value not a Number or not in range
  */
 Packet.prototype.putUShort = function (value) {
-  if ('number' !== typeof value || value < 0 || value > 65535) {
+  if ('boolean' === typeof value) {
+    // Convert a boolean to a number
+    value = Number(value);
+  } else if ('number' !== typeof value || value < 0 || value > 65535) {
     throw TypeError('Unsigned Short to write must be Number and in range 0...65535');
   }
   this.resize(2); // Resize memBlock if needed
@@ -171,7 +180,10 @@ Packet.prototype.putUShort = function (value) {
  * @throws {TypeError}    If value not a Number or out of range
  */
 Packet.prototype.putInt = function (value) {
-  if ('number' !== typeof value || value < -2147483648 || value > 2147483648) {
+  if ('boolean' === typeof value) {
+    // Convert a boolean to a number
+    value = Number(value);
+  } else if ('number' !== typeof value || value < -2147483648 || value > 2147483648) {
     throw TypeError('Integer to write must be Number and in range -2147483648...2147483648');
   }
   this.resize(4); // Resize memBlock if needed
@@ -186,7 +198,10 @@ Packet.prototype.putInt = function (value) {
  * @throws {TypeError}    If value NaN or not a Number
  */
 Packet.prototype.putFloat = function (value) {
-  if ('number' !== typeof value || isNaN(value)) {
+  if ('boolean' === typeof value) {
+    // Convert a boolean to a number
+    value = Number(value);
+  } else if ('number' !== typeof value || isNaN(value)) {
     throw TypeError('Float to write must be Number and not NaN.');
   }
   this.resize(4); // Resize memBlock if needed
