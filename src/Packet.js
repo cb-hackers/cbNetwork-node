@@ -46,6 +46,21 @@ Packet.prototype.resize = function (size) {
 ///////////////////////////
 
 /**
+ * @returns {Number}  the length of the memblock without the id (first four bytes).
+ */
+Packet.prototype.getSize = function () {
+  return (this.memBlock.length - 4) < 0 ? 0 : this.memBlock.length - 4;
+}
+
+/**
+ * @returns {Number}  the real length of the memblock.
+ */
+Packet.prototype.__defineGetter__('length', function (value) {
+  return this.memBlock.length;
+});
+
+
+/**
  * Returns an unsigned byte from the memblock and moves the offset accordingly.
  *
  * @returns {Number}  an unsigned byte, 0...255

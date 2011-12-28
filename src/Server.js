@@ -67,10 +67,13 @@ function Server(port, address) {
   this._clients = {};
   this._clientCount = 0;
   this._sock = dgram.createSocket('udp4');
-  this._sock.on('message', function (msg, peer) {
+  this._sock.on('message', function UDPMessage(msg, peer) {
     // log.write('New packet!'.rainbow); // Awesome!
     var data = new Packet(new Buffer(msg)), client;
-    if( data.clientId === 0 ) {
+    if (data.length < 4) {
+      return;  // Packet contains no client ID or other data, ignore it.
+    }
+    if (data.clientId === 0) {
       log.info('New client connected %0 (%1)', peer.address.magenta, String(self._clientCount + 1).magenta);
       // Create a new client
       client = new Client(peer.address, peer.port, self._clientCount + 1, data, self._sock);
