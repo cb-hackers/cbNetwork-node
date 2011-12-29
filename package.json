@@ -15,5 +15,6 @@
   "keywords": ["cbnetwork", "coolbasic", "udp"],
   "dependencies": {"colors" : "*"},
   "bugs": "https://github.com/VesQ/cbNetwork-node/issues",
+  "license": "MIT",
   "engines": { "node": ">=0.6.0" }
 }
