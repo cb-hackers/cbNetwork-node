@@ -165,6 +165,7 @@ Packet.prototype.putShort = function (value) {
   } else if ('number' !== typeof value || value < -32768 || value > 32768) {
     throw TypeError('Short to write must be Number and in range -32768...32768');
   }
+  value = Math.round(value);
   this.resize(2); // Resize memBlock if needed
   this.memBlock.writeInt16LE(value, this.offset);
   this.offset += 2;
@@ -183,6 +184,7 @@ Packet.prototype.putUShort = function (value) {
   } else if ('number' !== typeof value || value < 0 || value > 65535) {
     throw TypeError('Unsigned Short to write must be Number and in range 0...65535');
   }
+  value = Math.round(value);
   this.resize(2); // Resize memBlock if needed
   this.memBlock.writeUInt16LE(value, this.offset);
   this.offset += 2;
@@ -201,6 +203,7 @@ Packet.prototype.putInt = function (value) {
   } else if ('number' !== typeof value || value < -2147483648 || value > 2147483648) {
     throw TypeError('Integer to write must be Number and in range -2147483648...2147483648');
   }
+  value = Math.round(value);
   this.resize(4); // Resize memBlock if needed
   this.memBlock.writeInt32LE(value, this.offset);
   this.offset += 4;
