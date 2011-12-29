@@ -1,7 +1,8 @@
 {
   "name": "cbNetwork", 
-  "version": "v0.1.6",
+  "version": "v0.1.7",
   "description": "A Node.js implementation of cbNetwork, which is a CoolBasic library",
+  "author": { "name": "Ville Lahdenvuo", "email": "tuhoojabotti@gmail.com", "url": "http://tuhoojabotti.com" },
   "contributors": [
     { "name": "Vesa Laakso", "email": "laakso.vesa@gmail.com", "url": "http://vesq.net" },
     { "name": "Ville Lahdenvuo", "email": "tuhoojabotti@gmail.com", "url": "http://tuhoojabotti.com" }

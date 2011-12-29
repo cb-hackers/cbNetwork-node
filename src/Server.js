@@ -69,7 +69,7 @@ function Server(port, address) {
   this._sock = dgram.createSocket('udp4');
   this._sock.on('message', function UDPMessage(msg, peer) {
     // log.write('New packet!'.rainbow); // Awesome!
-    var data = new Packet(new Buffer(msg)), client;
+    var data = new Packet(msg), client;
     if (data.length < 4) {
       return;  // Packet contains no client ID or other data, ignore it.
     }

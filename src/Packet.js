@@ -16,7 +16,7 @@
 function Packet (input) {
   if ('number' === typeof input) {
     this.memBlock = new Buffer(input + 4);
-  } else if (input instanceof Buffer) {
+  } else if (Buffer.isBuffer(input)) {
     this.memBlock = input;
   } else if (input instanceof Packet) {
     this.memBlock = input.memBlock;
