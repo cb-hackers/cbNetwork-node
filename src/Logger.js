@@ -12,8 +12,9 @@ var colors = require('colors');
  * @param {String} [prefix]   Message to apply to the start of the message %t will be replaced with a timestamp.
  *                                                For example: '[My logger :) [%t]]' Will print [My logger :) [00:42:30]]
  */
-function Logger(prefix) {
+function Logger(prefix, debug) {
   this.prefix = prefix || '';
+  this.debug = debug;
 }
 
 /**
@@ -23,7 +24,8 @@ Logger.prototype.write = function () {
   var prfx = ''
     , d = new Date()
     , msg = arguments[0]
-    , args;
+    , args
+    , err;
   // Create prefix
   if (this.prefix) {
     prfx = this.prefix
@@ -41,7 +43,11 @@ Logger.prototype.write = function () {
       msg = msg.replace(new RegExp('%' + i, 'g'), args[i]);
     }
   }
-  
+  if (this.debug) {
+    err = new Error;
+    Error.captureStackTrace(err, arguments.callee);
+    console.log(err.stack.split('\n')[2].trim().grey);
+  }
   console.log(prfx + msg);
 };
 
@@ -105,4 +111,4 @@ function p(i) {
   return (i < 10 ? '0' : '') + i;
 }
 
-exports = module.exports = Logger;
+module.exports = Logger;

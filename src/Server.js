@@ -66,6 +66,7 @@ function Server(port, address) {
   var self = this;
   this._clients = {};
   this._clientCount = 0;
+  this.closed = false;
   this._sock = dgram.createSocket('udp4');
   this._sock.on('message', function UDPMessage(msg, peer) {
     // log.write('New packet!'.rainbow); // Awesome!
@@ -100,6 +101,8 @@ function Server(port, address) {
     self.close(); // Abandon ship!
   });
   this._sock.on('close', function () {
+    self.closed = true;
+    self.emit('close');
     log.info('Server closed gracefully');
   });
   this._sock.on('listening', function () {
@@ -113,7 +116,9 @@ Server.prototype.__proto__ = EventEmitter.prototype;
 
 /** Closes the socket abandoning all clients. */
 Server.prototype.close = function () {
-  this._sock.close();
+  if (!this.closed) {
+    this._sock.close();
+  }
 };
 
 /**
