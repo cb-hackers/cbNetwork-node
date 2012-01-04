@@ -11,10 +11,11 @@ var colors = require('colors');
  *
  * @param {String} [prefix]   Message to apply to the start of the message %t will be replaced with a timestamp.
  *                                                For example: '[My logger :) [%t]]' Will print [My logger :) [00:42:30]]
+ * @param {Number} [debug]    Debug-level 1 = print log.debug 2 = print where the log was called from
  */
 function Logger(prefix, debug) {
   this.prefix = prefix || '';
-  this.debug = debug;
+  this.dbg = debug;
 }
 
 /**
@@ -43,12 +44,25 @@ Logger.prototype.write = function () {
       msg = msg.replace(new RegExp('%' + i, 'g'), args[i]);
     }
   }
-  if (this.debug) {
+  // Debug level 2 or higher
+  if (this.dbg > 1) {
     err = new Error;
     Error.captureStackTrace(err, arguments.callee);
     console.log(err.stack.split('\n')[2].trim().grey);
   }
   console.log(prfx + msg);
+};
+
+/**
+ * @param {String} msg     Message to print (only in debug mode) with a blue [DEBUG]-tag
+ * @param {String} [var0]  Variable to replace %0 from msg
+ * @param {String} [var1]  Variable to replace %1 from msg
+ * @param {String} [varN]  Variable to replace %n from msg and so forth
+ */
+Logger.prototype.debug = function () {
+  if (!this.dbg) { return; }
+  arguments[0] = '[DEBUG] '.blue + arguments[0];
+  this.write.apply(this, arguments);
 };
 
 /**
