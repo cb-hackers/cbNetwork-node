@@ -9,3 +9,6 @@ tests/
 ## ...except for README.md and index.js
 !README.md
 !index.js
+
+## And of course, don't forget the src/ folder!
+!src/
