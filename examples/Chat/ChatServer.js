@@ -28,7 +28,7 @@ var server = new cbNetwork.Server(argv.p, argv.a);
 
 // Enable graceful exit
 process.stdin.resume();
-tty.setRawMode(true);
+process.stdin.setRawMode(true);
 process.stdin.on('keypress', function(char, key) {
   if (key && key.ctrl && key.name == 'c') {
     server.close(); // Close the server gracefully
