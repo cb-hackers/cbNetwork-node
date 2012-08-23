@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/VesQ/cbNetwork-node.png)](http://travis-ci.org/VesQ/cbNetwork-node)
 A Node.js implementation of cbNetwork
 =====================================
 Philosophy
